@@ -11,6 +11,8 @@ Authors
 Marc Català Sala <mcatala@ioc.cat>
 Albert Gasset Romo <albert@ioc.cat>
 
+Idea by David Pinyol <dpinol1@gmail.com>
+
 Copyright
 =========
 
