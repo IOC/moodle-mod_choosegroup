@@ -1,0 +1,31 @@
+<?php
+
+$string['activityclosed'] = 'This activity is closed.';
+$string['allowupdate'] = 'Allow group update';
+$string['changegroup'] = ' You are allowed to change your group';
+$string['chooseagroup'] = 'Choose a group';
+$string['choosegroup:choose'] = 'Choose group';
+$string['currentgroup'] = 'Current group';
+$string['groupchosen'] = 'Group chosen: <strong>$a</strong>';
+$string['grouplimit'] = 'Group limit';
+$string['groupmembers'] = 'Group members';
+$string['groups'] = 'Allowed groups';
+$string['intro'] = 'Introduction';
+$string['modulename'] = 'Choose group';
+$string['modulenameplural'] = 'Choose group';
+$string['name'] = 'Name';
+$string['nocoursegroups'] = 'Current course have no groups.';
+$string['nogroups'] = 'No available groups';
+$string['nomembers'] = 'No group members';
+$string['novacancies'] = 'No vacancies';
+$string['owngroupmembers'] = 'Fellow group members';
+$string['showmembers'] = 'Show group members';
+$string['shownames'] = 'Show members name';
+$string['showresults:after'] = 'Show group members after they choose a group';
+$string['showresults:before'] = 'Show group members before they choose a group';
+$string['showresults:closed'] = 'Show group members after activity is closed';
+$string['showresults:never'] = 'Never';
+$string['timeclose'] = 'Closing date';
+$string['timeopen'] = 'Opening date';
+$string['vacancies'] = '$a vacancies';
+$string['vacancy'] = '$a vacancy';

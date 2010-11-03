@@ -1,0 +1,31 @@
+<?php
+
+$string['activityclosed'] = 'Aquesta activitat està tancada.';
+$string['allowupdate'] = 'Permet canviar de grup';
+$string['changegroup'] = ' Si voleu podeu canviar de grup';
+$string['chooseagroup'] = 'Tria un grup';
+$string['choosegroup:choose'] = 'Tria grup';
+$string['currentgroup'] = 'Grup actual';
+$string['groupchosen'] = 'Esteu assignat al grup: <strong>$a</strong>';
+$string['grouplimit'] = 'Límit per grup';
+$string['groupmembers'] = 'Membres de cada grup';
+$string['groups'] = 'Grups elegibles pels alumnes';
+$string['intro'] = 'Introducció';
+$string['modulename'] = 'Tria grup';
+$string['modulenameplural'] = 'Tria grup';
+$string['name'] = 'Nom';
+$string['nocoursegroups'] = 'El curs actual no té grups creats.';
+$string['nogroups'] = 'No hi ha cap grup disponible';
+$string['nomembers'] = 'No hi ha membres en aquest grup';
+$string['novacancies'] = 'No hi places lliures';
+$string['owngroupmembers'] = 'Membres del seu grup';
+$string['showmembers'] = 'Mostrar els membres de cada grup';
+$string['shownames'] = 'Mostrar el nom dels membres de cada grup';
+$string['showresults:after'] = 'Després d\'haver triat un grup';
+$string['showresults:before'] = 'Abans de triar un grup';
+$string['showresults:closed'] = 'Quan es tanqui l\'activitat';
+$string['showresults:never'] = 'Mai';
+$string['timeclose'] = 'Data de tancament';
+$string['timeopen'] = 'Data d\'obertura';
+$string['vacancies'] = '$a places lliures';
+$string['vacancy'] = '$a plaça lliure';

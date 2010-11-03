@@ -1,0 +1,31 @@
+<?php
+
+$string['activityclosed'] = 'Esta actividad esta cerrada.';
+$string['allowupdate'] = 'Permite cambiar de grupo';
+$string['changegroup'] = ' Si quiere puede volver a cambiar de grupo';
+$string['chooseagroup'] = 'Escoge un grupo';
+$string['choosegroup:choose'] = 'Escoge grupo';
+$string['currentgroup'] = 'Grupo actual';
+$string['groupchosen'] = 'Esta assignado al grupo: <strong>$a</strong>';
+$string['grouplimit'] = 'Límite por grupo';
+$string['groupmembers'] = 'Miembros de cada grupo';
+$string['groups'] = 'Grupos elegibles por los alumnos';
+$string['intro'] = 'Introducción';
+$string['modulename'] = 'Escoge grupo';
+$string['modulenameplural'] = 'Escoge grupo';
+$string['name'] = 'Nombre';
+$string['nocoursegroups'] = 'El curso actual no tiene grupos creados.';
+$string['nogroups'] = 'No hay ningún grupo disponible';
+$string['nomembers'] = 'No hay miembros en este grup';
+$string['novacancies'] = 'No hay plazas libres';
+$string['owngroupmembers'] = 'Miembros de su grupo';
+$string['showmembers'] = 'Mostrar los miembros de cada grupo';
+$string['shownames'] = 'Mostrar el nombre de los miembros de cada grupo';
+$string['showresults:after'] = 'Después de escoger un grupo';
+$string['showresults:before'] = 'Antes de escoger un grupo';
+$string['showresults:closed'] = 'Cuando se cierre la activitat';
+$string['showresults:never'] = 'Nunca';
+$string['timeclose'] = 'Fecha de cierre';
+$string['timeopen'] = 'Fecha de inicio';
+$string['vacancies'] = '$a plazas libres';
+$string['vacancy'] = '$a plaza libre';
