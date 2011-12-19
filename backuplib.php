@@ -80,7 +80,7 @@ function choosegroup_check_backup_mods($course,$user_data=false,$backup_unique_c
     }
     //First the course data
     $info[0][0] = get_string("modulenameplural","choosegroup");
-    if ($ids = choice_ids ($course)) {
+    if ($ids = choosegroup_ids ($course)) {
         $info[0][1] = count($ids);
     } else {
         $info[0][1] = 0;
