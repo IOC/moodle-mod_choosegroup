@@ -5,9 +5,11 @@ Choose Group is a Moodle activity that allows students to choose their group.
 
 Web: https://github.com/IOC/moodle-choosegroup
 
+
 Install
 =======
 Download code from gitHub, and copy inside directory <moodle directory>/mod/choosegroup
+
 
 Authors
 =======
@@ -16,6 +18,21 @@ Marc Català Sala <mcatala@ioc.cat>
 Albert Gasset Romo <albert@ioc.cat>
 
 Idea by David Pinyol <dpinol1@gmail.com>
+
+
+Features
+========
+
+Moodle 1.9
+----------
+- Several options with visualization of group members
+- Students can modify their choice
+- Option to add student's full name next to their profile picture
+
+Moodle 2.x
+----------
+- Each group has their own limit
+
 
 Copyright
 =========

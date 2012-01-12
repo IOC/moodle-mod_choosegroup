@@ -1,5 +1,5 @@
 <?php
-/* Copyright © 2010 Institut Obert de Catalunya
+/* Copyright © 2011 Institut Obert de Catalunya
 
    This file is part of Choose Group.
 
@@ -17,35 +17,60 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * Build and returns groups array with several info about course groups
+ *
+ * @global object
+ * @global object
+ * @param object $choosegroup
+ * @return array Info about groups
+ */
 function groups_assigned($choosegroup) {
-    global $COURSE;
+    global $COURSE, $DB;
 
-    $groupsok = get_field('choosegroup', 'groups', 'id', $choosegroup->id, 'course', $COURSE->id);
-    if (!empty($groupsok)) {
-        $groupsok = explode(',', $groupsok);
+    if(!$groupsok = $DB->get_records_sql("SELECT g.groupid,g.maxlimit
+                              FROM {choosegroup_group} g
+                         	 JOIN {choosegroup} c ON (g.choosegroupid = c.id
+                         	 	AND c.course = ?)
+                         	 AND g.choosegroupid = ?", array($COURSE->id, $choosegroup->id))){
+        return false;
     }
-    else{
-        $groupsok = array();
-    }
-
-    if (!$records = get_records('groups', 'courseid', $choosegroup->course, 'name')) {
+    if (!$records = $DB->get_records('groups', array('courseid' => $choosegroup->course), 'name')) {
         return false;
     }
 
     $groups = array();
-    foreach ($records as $record) {
-        if (in_array($record->id, $groupsok)){
-            $record->members = count_records('groups_members',
-                                             'groupid', $record->id);
-            $record->vacancies = max(0, $choosegroup->grouplimit - $record->members);
-            $groups[$record->id] = $record;
+    foreach ($records as $record){
+        $group = new stdClass();
+        $group->id = $record->id;
+        $group->name = $record->name;
+        $groups[$group->id] = $group;
+    }
+
+    foreach ($groupsok as $groupok) {
+        if (array_key_exists($groupok->groupid, $groups)){
+            $groups[$groupok->groupid]->members = $DB->count_records('groups_members',
+                                             array('groupid' => $groupok->groupid));
+            $groups[$groupok->groupid]->vacancies = max(array(0, $groupok->maxlimit - $groups[$groupok->groupid]->members));
+            $groups[$groupok->groupid]->maxlimit = $groupok->maxlimit;
         }
     }
+
     return $groups;
 }
 
+/**
+ * Update user's new assignment group
+ *
+ * @global object
+ * @global object
+ * @param object $choosegroup
+ * @param array $groups
+ * @param int $groupid
+ * @param object $currentgroup
+ */
 function choose($choosegroup, $groups, $groupid, $currentgroup) {
-    global $COURSE, $USER;
+    global $DB, $USER;
 
     if (!confirm_sesskey()){
         return;
@@ -55,71 +80,167 @@ function choose($choosegroup, $groups, $groupid, $currentgroup) {
         return;
     }
 
-    if ($choosegroup->grouplimit &&
-    $groups[$groupid]->members >= $choosegroup->grouplimit) {
+    if (($groups[$groupid]->maxlimit > 0) &&
+    $groups[$groupid]->members >= $groups[$groupid]->maxlimit) {
         return;
     }
 
     //Firstly remove previous group assignment
     if ($currentgroup) {
-        delete_records('groups_members', 'groupid', $currentgroup->id, 'userid', $USER->id);
+        $DB->delete_records('groups_members', array('groupid' => $currentgroup->id, 'userid' => $USER->id));
     }
 
-    $record = (object) array('groupid' => $groupid,
-                             'userid' => $USER->id,
-                             'timeadded' => time());
-    insert_record('groups_members', $record);
+    $record = new stdClass();
+    $record->groupid = $groupid;
+    $record->userid = $USER->id;
+    $record->timeadded = time();
+    $DB->insert_record('groups_members', $record);
 }
 
-function choosegroup_add_instance($record) {
-    $record->grouplimit = max(0, min(9999, $record->grouplimit));
-    $record->timecreated = time();
-    $record->timemodified = time();
-    $record->groups = choosegroup_prepare_groups($record);
-    return insert_record('choosegroup', $record);
+/**
+ * Given an object containing all the necessary data,
+ * (defined by the form in mod_form.php) this function
+ * will create a new instance and return the id number
+ * of the new instance.
+ *
+ * @global object
+ * @param object $choosegroup
+ * @return int intance id
+ */
+function choosegroup_add_instance($choosegroup) {
+    global $DB;
+    $choosegroup->timecreated = time();
+    $choosegroup->timemodified = time();
+    $choosegroup->id = $DB->insert_record('choosegroup', $choosegroup);
+    foreach ($choosegroup->lgroup as $key => $value) {
+        if (isset($choosegroup->ugroup[$key]) || isset($value) && $value <> '0') {
+            $group = new stdClass();
+            $group->choosegroupid = $choosegroup->id;
+            $group->groupid = $key;
+            $group->maxlimit = isset($choosegroup->ugroup[$key])?0:$value;
+            $DB->insert_record("choosegroup_group", $group);
+        }
+    }
+    return $choosegroup->id;
 }
 
+/**
+ * Given an ID of an instance of this module,
+ * this function will permanently delete the instance
+ * and any data that depends on it.
+ *
+ * @global object
+ * @param int $id
+ * @return bool success
+ */
 function choosegroup_delete_instance($id) {
-    return delete_records('choosegroup', 'id', $id);
+    global $DB;
+    $DB->delete_records('choosegroup_group', array('choosegroupid' => $id));
+    return $DB->delete_records('choosegroup', array('id' => $id));
 }
 
-function choosegroup_detected_groups($courseid) {
-    $records = get_records('groups', 'courseid', $courseid, 'name');
-    if (!$records) {
-        return array();
+
+/**
+* @uses FEATURE_GROUPS
+* @uses FEATURE_GROUPINGS
+* @uses FEATURE_GROUPMEMBERSONLY
+* @uses FEATURE_MOD_INTRO
+* @uses FEATURE_COMPLETION_TRACKS_VIEWS
+* @uses FEATURE_GRADE_HAS_GRADE
+* @uses FEATURE_GRADE_OUTCOMES
+* @param string $feature FEATURE_xx constant for requested feature
+* @return mixed True if module supports feature, null if doesn't know
+*/
+function choosegroup_supports($feature) {
+    switch($feature) {
+        case FEATURE_GROUPS:                  return true;
+        case FEATURE_GROUPINGS:               return true;
+        case FEATURE_GROUPMEMBERSONLY:        return true;
+        case FEATURE_MOD_INTRO:               return true;
+        case FEATURE_COMPLETION_TRACKS_VIEWS: return true;
+        case FEATURE_COMPLETION_HAS_RULES:    return true;
+        case FEATURE_GRADE_HAS_GRADE:         return false;
+        case FEATURE_GRADE_OUTCOMES:          return false;
+        case FEATURE_BACKUP_MOODLE2:          return true;
+        case FEATURE_SHOW_DESCRIPTION:        return true;
+
+        default: return null;
     }
-    return $records;
 }
 
-function choosegroup_update_instance($record) {
-    $record->id = $record->instance;
-    $record->grouplimit = max(0, min(9999, $record->grouplimit));
-    $record->timemodified = time();
-    $record->groups = choosegroup_prepare_groups($record);
-    return update_record('choosegroup', $record);
+/**
+ * Returns all groups in a specified course, if boolean is true returns only group's id
+ *
+ * @param int $courseid
+ * @param bool $onlyids
+ * @return object
+ */
+function choosegroup_detected_groups($courseid, $onlyids = false) {
+    global $DB;
+
+    $groups = groups_get_all_groups($courseid);
+    if (!is_array($groups)){
+        $groups = array();
+    }
+    if ($onlyids) {
+        $groups = array_keys($groups);
+    }
+    return $groups;
 }
 
-function choosegroup_prepare_groups($record) {
-    $groups = choosegroup_detected_groups($record->course);
-    $groupsid = '';
-    foreach ($groups as $group){
-        $name = "group$group->id";
-        if (isset($record->$name) && $record->$name) {
-            if (!empty($groupsid)){
-                $groupsid .= ",$group->id";
+/**
+ * Given an object containing all the necessary data,
+ * (defined by the form in mod_form.php) this function
+ * will update an existing instance with new data.
+ *
+ * @global object
+ * @param object $choosegroup
+ * @return bool success
+ */
+function choosegroup_update_instance($choosegroup) {
+    global $DB;
+    $choosegroup->id = $choosegroup->instance;
+    $choosegroup->timemodified = time();
+    if (isset($choosegroup->lgroup)){
+        //update, delete or insert groups
+        foreach ($choosegroup->lgroup as $key => $value) {
+            $group = new stdClass();
+            $group->groupid = $key;
+            $group->choosegroupid = $choosegroup->id;
+            $group->maxlimit = (isset($choosegroup->ugroup[$key]))?0:max(0, min(9999, $value));
+            if (isset($choosegroup->groupid[$key]) && !empty($choosegroup->groupid[$key])){//existing choosegroup_group record
+                $group->id = $choosegroup->groupid[$key];
+                if (isset($choosegroup->ugroup[$key]) || isset($value) && $value <> '0') {
+                    $DB->update_record("choosegroup_group", $group);
+                } else { //empty old option - needs to be deleted.
+                    $DB->delete_records("choosegroup_group", array("id" => $group->id));
+                }
             } else {
-                $groupsid = "$group->id";
+                if (isset($choosegroup->ugroup[$key]) || isset($value) && $value <> '0') {
+                    $DB->insert_record("choosegroup_group", $group);
+                }
             }
         }
     }
-    return $groupsid;
+    return $DB->update_record('choosegroup', $choosegroup);
 }
 
+/**
+ * Return user group info, otherwise returns false
+ *
+ * @global object
+ * @global object
+ * @param object $groups
+ * @return object if user has a group, bool false if not.
+ */
 function chosen($groups){
-    global $USER;
+    global $DB, $USER;
+    if (empty($groups)){
+        return false;
+    }
     $info = new stdClass();
-    foreach ($groups as $id=>$group){
-        if(record_exists('groups_members','groupid', $id, 'userid', $USER->id)) {
+    foreach ($groups as $id => $group){
+        if($DB->record_exists('groups_members', array('groupid' => $id, 'userid' => $USER->id))) {
             $info->id = $id;
             $info->name = $group->name;
             return $info;
@@ -128,6 +249,15 @@ function chosen($groups){
     return false;
 }
 
+/**
+ * Prints group form choice
+ *
+ * @param object $groups
+ * @param string $message
+ * @param object $choosegroup
+ * @param object $url
+ * @param int $groupid
+ */
 function print_form($groups, $message, $choosegroup, $url, $groupid = false) {
     if (empty($groups)) {
         print_string('nogroups', 'choosegroup');
@@ -140,11 +270,11 @@ function print_form($groups, $message, $choosegroup, $url, $groupid = false) {
         echo '<form method="post" action="' . s($url->out()) . '">'
         . '<input type="hidden" name="sesskey" value="'
         . sesskey() . '"/>';
-        foreach ($groups as $group) {
+        foreach ($groups as $key => $group) {
             $vacancies = '';
             $disabled = '';
             $dimmed = '';
-            if ($choosegroup->grouplimit) {
+            if ($group->maxlimit) {
                 if (!$group->vacancies) {
                     $disabled = 'disabled="disabled"';
                     $dimmed = 'class="dimmed"';
@@ -158,13 +288,13 @@ function print_form($groups, $message, $choosegroup, $url, $groupid = false) {
                     $group->vacancies) . ')';
                 }
             }
-            	
-            if ($groupid && $group->id === $groupid) {
+
+            if ($groupid && $key === $groupid) {
                 $disabled = 'disabled="disabled"';
                 $dimmed = 'class="dimmed"';
                 $vacancies = '(' . get_string('currentgroup', 'choosegroup') . ')';
             }
-            	
+
             $checkbox = "<input $disabled type=\"radio\" name=\"group\" "
             . "id=\"group-{$group->id}\" value=\"{$group->id}\" />";
             $label = "<label $dimmed for=\"group-{$group->id}\">"
@@ -183,24 +313,36 @@ function print_form($groups, $message, $choosegroup, $url, $groupid = false) {
     }
 }
 
+/**
+ * Show members for specified group
+ *
+ * @global object
+ * @global object
+ * @global object
+ * @global object
+ * @param int $groupid
+ * @param bool $shownames
+ * @param string $class
+ */
 function show_members($groupid, $shownames, $class='users-group') {
-    global $CFG, $COURSE;
+    global $CFG, $DB, $COURSE, $OUTPUT;
 
-    $members = get_fieldset_select('groups_members', 'userid', 'groupid = '. $groupid);
+    $members = $DB->get_fieldset_select('groups_members', 'userid', 'groupid = '. $groupid);
     echo '<div class="'.$class.'">';
     if (!empty($members)) {
-        $userids = implode(",", $members);
-        $rs = get_recordset_list('user', 'id', $userids, 'lastname');
-        while ($user = rs_fetch_next_record($rs)) {
-            $class = ($shownames)?'user-group-names':'user-group';
-            echo '<div class="'.$class.'">';
-            print_user_picture($user, $COURSE->id);
-            if ($shownames) {
-                echo '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$user->id.'&amp;course='.$COURSE->id.'">'.fullname($user).'</a>';
+        $rs = $DB->get_recordset_list('user', 'id', $members, 'lastname');
+        if ($rs->valid()) {
+            foreach ($rs as $user) {
+                $class = ($shownames)?'user-group-names':'user-group';
+                echo '<div class="'.$class.'">';
+                echo $OUTPUT->user_picture($user, array('courseid' => $COURSE->id));
+                if ($shownames) {
+                    echo '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$user->id.'&amp;course='.$COURSE->id.'">'.fullname($user).'</a>';
+                }
+                echo '</div>';
             }
-            echo '</div>';
         }
-        rs_close($rs);
+        $rs->close();
     } else {
         print_string('nomembers', 'choosegroup');
     }
@@ -208,39 +350,49 @@ function show_members($groupid, $shownames, $class='users-group') {
     echo "</div>";
 }
 
+/**
+ * Show members in columns from specified group
+ *
+ * @global object
+ * @global object
+ * @global object
+ * @global object
+ * @param int $groupid
+ */
 function show_members_col($groupid) {
-    global $CFG, $COURSE;
+    global $CFG, $COURSE, $DB, $OUTPUT;
 
     $position = 0;
     $col1 = '';
     $col2 = '';
     $col3 = '';
 
-    $members = get_fieldset_select('groups_members', 'userid', 'groupid = '. $groupid);
+    $members = $DB->get_fieldset_select('groups_members', 'userid', 'groupid = '. $groupid);
     if (!empty($members)) {
-        $userids = implode(",", $members);
-        $rs = get_recordset_list('user', 'id', $userids, 'lastname');
-        while ($user = rs_fetch_next_record($rs)) {
-            $txt = '<div class="user-col">'
-                   .'<div class="user-col-pic">'
-                   .print_user_picture($user, $COURSE->id, null, 0, true)
-                   .'</div>'
-                   .'<div class="user-col-name">'
-                   .'<a href="'.$CFG->wwwroot.'/user/view.php?id='.$user->id.'&amp;course='.$COURSE->id.'">'.fullname($user,true).'</a>'
-                   .'</div>'
-                   .'</div>'
-                   .'<div class="choosegroup_clear"></div>';
-            $position += 1;
-            if ($position === 1) {
-                  $col1 .= $txt;
-            } elseif ($position === 2) {
-                  $col2 .= $txt;
-            } else {
-                  $col3 .= $txt;
-                  $position = 0;
+        $rs = $DB->get_recordset_list('user', 'id', $members, 'lastname');
+        if ($rs->valid()) {
+            foreach ($rs as $user) {
+                $txt = '<div class="user-col">'
+                       .'<div class="user-col-pic">'
+                       .$OUTPUT->user_picture($user, array('courseid' => $COURSE->id))
+                       .'</div>'
+                       .'<div class="user-col-name">'
+                       .'<a href="'.$CFG->wwwroot.'/user/view.php?id='.$user->id.'&amp;course='.$COURSE->id.'">'.fullname($user,true).'</a>'
+                       .'</div>'
+                       .'</div>'
+                       .'<div class="choosegroup_clear"></div>';
+                $position += 1;
+                if ($position === 1) {
+                    $col1 .= $txt;
+                } elseif ($position === 2) {
+                    $col2 .= $txt;
+                } else {
+                    $col3 .= $txt;
+                    $position = 0;
+                }
             }
         }
-        rs_close($rs);
+        $rs->close();
         echo '<div class="user-group-col">'.$col1.'</div>';
         echo '<div class="user-group-col">'.$col2.'</div>';
         echo '<div class="user-group-col">'.$col3.'</div>';
@@ -248,4 +400,19 @@ function show_members_col($groupid) {
         print_string('nomembers', 'choosegroup');
     }
     echo '<div class="choosegroup_clear"></div>';
+}
+
+/**
+ * This function gets run whenever group is deleted from course
+ *
+ * @param object $object
+ */
+function choosegroup_group_deleted($object){
+//id, courseid, name, description, timecreated, timemodified, picture
+global $DB;
+
+$params = array('courseid' => $object->courseid, 'groupid' => $object->id);
+$choosegroupselect = "IN (SELECT c.id FROM {choosegroup} c WHERE c.course = :courseid)";
+
+$DB->delete_records_select('choosegroup_group', "groupid = :groupid AND choosegroupid $choosegroupselect", $params);
 }

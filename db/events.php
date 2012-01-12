@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version information
+ * Meta course enrolment plugin event handler definition.
  *
  * @package    mod
  * @subpackage choosegroup
@@ -23,9 +24,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-$module->version   = 2012010900;            // The current module version (Date: YYYYMMDDXX)
-$module->requires  = 2011120500;            // Moodle 2.2
-$module->component = 'mod_choosegroup';     // Full name of the plugin (used for diagnostics)
-$module->cron      = 0;                     // Period for cron to check this module (secs)
+/* List of handlers */
+$handlers = array (
+    'groups_group_deleted ' => array (
+        'handlerfile'      => '/mod/choosegroup/lib.php',
+        'handlerfunction'  => 'choosegroup_group_deleted',
+        'schedule'         => 'instant',
+        'internal'         => 1,
+    ),
+);

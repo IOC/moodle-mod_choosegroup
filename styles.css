@@ -1,25 +1,25 @@
-#mod-choosegroup-view #dates {
+#page-mod-choosegroup-view #dates {
   width: 70%;
   margin-top: 30px;
   margin-bottom: 30px;
 }
 
-#mod-choosegroup-view #dates .c0 {
+#page-mod-choosegroup-view #dates .c0 {
   text-align: left;
   font-weight: bold;
 }
 
-#mod-choosegroup-view .main {
+#page-mod-choosegroup-view .main {
     width: 70%;
     margin-bottom: 50px;
 }
 
-#mod-choosegroup-view .main2 {
+#page-mod-choosegroup-view .main2 {
     width: 98%;
     margin-bottom: 50px;
 }
 
-#mod-choosegroup-view .main li {
+#page-mod-choosegroup-view .main li {
     list-style-type: none;
 }
 
@@ -55,6 +55,10 @@ width:70%;
 clear: both;
 }
 
+.choosegroup-table{
+ border:0 none;
+}
+
 .user-group{
 float: left;
 position: relative;
@@ -74,6 +78,7 @@ width:100%;
 .user-col-pic{
 float:left;
 }
+
 .user-col-name{
 overflow:hidden;
 }

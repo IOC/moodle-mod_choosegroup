@@ -1,5 +1,5 @@
 <?php
-/* Copyright © 2010 Institut Obert de Catalunya
+/* Copyright © 2011 Institut Obert de Catalunya
 
    This file is part of Choose Group.
 
@@ -22,12 +22,14 @@ require_once(dirname(__FILE__).'/lib.php');
 
 $id = required_param('id', PARAM_INT);   // course
 
-if (! $course = get_record('course', 'id', $id)) {
-    error('Course ID is incorrect');
+$PAGE->set_url('/mod/choosegroup/index.php', array('id'=>$id));
+
+if (!$course = $DB->get_record('course', array('id'=>$id))) {
+    print_error('invalidcourseid');
 }
 
 require_course_login($course);
-
+$PAGE->set_pagelayout('incourse');
 add_to_log($course->id, 'choosegroup', 'view all', "index.php?id=$course->id", '');
 
 
@@ -36,20 +38,23 @@ add_to_log($course->id, 'choosegroup', 'view all', "index.php?id=$course->id", '
 $strchoosegroups = get_string('modulenameplural', 'choosegroup');
 $strchoosegroup  = get_string('modulename', 'choosegroup');
 
-
 /// Print the header
+$PAGE->set_title($strchoosegroups);
+$PAGE->set_heading($course->fullname);
+$PAGE->navbar->add($strchoosegroups);
+echo $OUTPUT->header();
 
-$navlinks = array();
-$navlinks[] = array('name' => $strchoosegroups, 'link' => '', 'type' => 'activity');
-$navigation = build_navigation($navlinks);
-
-print_header_simple($strchoosegroups, '', $navigation, '', '', true, '', navmenu($course));
 
 /// Get all the appropriate data
 
 if (! $choosegroups = get_all_instances_in_course('choosegroup', $course)) {
-    notice('There are no instances of choosegroup', "../../course/view.php?id=$course->id");
-    die;
+    notice(get_string('thereareno', 'moodle', $strchoosegroups), "../../course/view.php?id=$course->id");
+}
+
+
+$usesections = course_format_uses_sections($course->format);
+if ($usesections) {
+    $sections = get_all_sections($course->id);
 }
 
 /// Print the list of instances (your module will probably extend this)
@@ -58,6 +63,8 @@ $timenow  = time();
 $strname  = get_string('name');
 $strweek  = get_string('week');
 $strtopic = get_string('topic');
+
+$table = new html_table();
 
 if ($course->format == 'weeks') {
     $table->head  = array ($strweek, $strname);
@@ -86,9 +93,7 @@ foreach ($choosegroups as $choosegroup) {
     }
 }
 
-print_heading($strchoosegroups);
-print_table($table);
+echo "<br />";
+echo html_writer::table($table);
 
-/// Finish the page
-
-print_footer($course);
+echo $OUTPUT->footer();
