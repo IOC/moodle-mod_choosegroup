@@ -123,6 +123,7 @@ if ($is_open && ($choosegroup->timeopen || $choosegroup->timeclose)) {
 }
 
 if ($can_choose) {
+    $renderer = $PAGE->get_renderer('mod_choosegroup');
     $main = 'main';
     if (($chosen === false && $is_open && $choosegroup->showmembers < CHOOSEGROUP_AFTER) ||
     ($chosen !== false && $is_open && $choosegroup->showmembers < CHOOSEGROUP_CLOSED) ||
@@ -139,10 +140,10 @@ if ($can_choose) {
         if ($is_open && $choosegroup->allowupdate) {
             echo '<p>'.get_string('groupchosen', 'choosegroup', $chosen->name).
 				' ('. get_string('changegroup', 'choosegroup', $chosen->name). ' )</p>';
-            print_form($groups,'chooseagroup', $choosegroup, $url, $chosen->id);
+            echo $renderer->print_form($groups,'chooseagroup', $choosegroup, $url, $chosen->id);
             if ($choosegroup->showmembers == CHOOSEGROUP_AFTER){
                 echo '<p class="choosegroup_center"><u>'.get_string('owngroupmembers', 'choosegroup', $chosen->name).'</u></p>';
-                show_members($chosen->id, $choosegroup->shownames, 'show-users-group');
+                echo show_members($chosen->id, $choosegroup->shownames, 'show-users-group');
             }
         } else {
             echo '<p>'.get_string('groupchosen', 'choosegroup', $chosen->name).'</p>';
@@ -150,15 +151,15 @@ if ($can_choose) {
             (!$is_open && $choosegroup->showmembers < CHOOSEGROUP_NEVER)) {
                 echo '<p class="choosegroup_center"><u>'.get_string('owngroupmembers', 'choosegroup', $chosen->name).'</u></p>';
                 if ($choosegroup->shownames){
-                  show_members_col($chosen->id);
+                  echo show_members_col($chosen->id);
                 } else {
-                  show_members($chosen->id, $choosegroup->shownames, 'user-col');
+                  echo show_members($chosen->id, $choosegroup->shownames, 'user-col');
                 }
             }
         }
     } else {
         if ($is_open) {
-            print_form($groups,'chooseagroup', $choosegroup, $url);
+            echo $renderer->print_form($groups,'chooseagroup', $choosegroup, $url);
         } else {
             print_string('activityclosed', 'choosegroup', userdate($choosegroup->timeclose));
         }

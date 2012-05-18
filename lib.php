@@ -249,69 +249,6 @@ function chosen($groups){
     return false;
 }
 
-/**
- * Prints group form choice
- *
- * @param object $groups
- * @param string $message
- * @param object $choosegroup
- * @param object $url
- * @param int $groupid
- */
-function print_form($groups, $message, $choosegroup, $url, $groupid = false) {
-    if (empty($groups)) {
-        print_string('nogroups', 'choosegroup');
-    } else {
-        echo '<div class="choosegroup_left"><b>' . get_string($message, 'choosegroup') . ':</b></div>';
-        if ($choosegroup->showmembers < CHOOSEGROUP_AFTER) {
-            echo '<div class="choosegroup_right"><b>' . get_string('groupmembers', 'choosegroup') . ':</b></div>';
-        }
-        echo '<div class="choosegroup_clear"></div>';
-        echo '<form method="post" action="' . s($url->out()) . '">'
-        . '<input type="hidden" name="sesskey" value="'
-        . sesskey() . '"/>';
-        foreach ($groups as $key => $group) {
-            $vacancies = '';
-            $disabled = '';
-            $dimmed = '';
-            if ($group->maxlimit) {
-                if (!$group->vacancies) {
-                    $disabled = 'disabled="disabled"';
-                    $dimmed = 'class="dimmed"';
-                    $vacancies = '(' .  get_string('novacancies', 'choosegroup'). ')';
-                }
-                else if ($group->vacancies > 1) {
-                    $vacancies = '(' .  get_string('vacancies', 'choosegroup',
-                    $group->vacancies) . ')';
-                } else {
-                    $vacancies = '(' .  get_string('vacancy', 'choosegroup',
-                    $group->vacancies) . ')';
-                }
-            }
-
-            if ($groupid && $key === $groupid) {
-                $disabled = 'disabled="disabled"';
-                $dimmed = 'class="dimmed"';
-                $vacancies = '(' . get_string('currentgroup', 'choosegroup') . ')';
-            }
-
-            $checkbox = "<input $disabled type=\"radio\" name=\"group\" "
-            . "id=\"group-{$group->id}\" value=\"{$group->id}\" />";
-            $label = "<label $dimmed for=\"group-{$group->id}\">"
-            . s($group->name) . " $vacancies</label>";
-            $members = '';
-            $hr = '';
-            if ($choosegroup->showmembers < CHOOSEGROUP_AFTER) {
-                $members = show_members($group->id, $choosegroup->shownames);
-                $hr ='<hr />';
-            }
-            echo "<div class=\"choosegroup_left\">$checkbox $label</div> $members";
-            echo "<div class=\"choosegroup_clear\">$hr</div>";
-        }
-        echo '<input type="submit" value="' . get_string('submit') . '"/>'
-        .'</form>';
-    }
-}
 
 /**
  * Show members for specified group
@@ -328,26 +265,28 @@ function show_members($groupid, $shownames, $class='users-group') {
     global $CFG, $DB, $COURSE, $OUTPUT;
 
     $members = $DB->get_fieldset_select('groups_members', 'userid', 'groupid = '. $groupid);
-    echo '<div class="'.$class.'">';
+    $output = '<div class="'.$class.'">';
     if (!empty($members)) {
         $rs = $DB->get_recordset_list('user', 'id', $members, 'lastname');
         if ($rs->valid()) {
             foreach ($rs as $user) {
                 $class = ($shownames)?'user-group-names':'user-group';
-                echo '<div class="'.$class.'">';
-                echo $OUTPUT->user_picture($user, array('courseid' => $COURSE->id));
+                $output .= '<div class="'.$class.'">';
+                $output .= $OUTPUT->user_picture($user, array('courseid' => $COURSE->id));
                 if ($shownames) {
-                    echo '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$user->id.'&amp;course='.$COURSE->id.'">'.fullname($user).'</a>';
+                    $output .= '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$user->id.'&amp;course='.$COURSE->id.'">'.fullname($user).'</a>';
                 }
-                echo '</div>';
+                $output .= '</div>';
             }
         }
         $rs->close();
     } else {
-        print_string('nomembers', 'choosegroup');
+        $output .= get_string('nomembers', 'choosegroup');
     }
-    echo '<div class="choosegroup_clear"></div>';
-    echo "</div>";
+    $output .= '<div class="choosegroup_clear"></div>';
+    $output .= "</div>";
+
+    return $output;
 }
 
 /**
@@ -362,6 +301,7 @@ function show_members($groupid, $shownames, $class='users-group') {
 function show_members_col($groupid) {
     global $CFG, $COURSE, $DB, $OUTPUT;
 
+    $output = '';
     $position = 0;
     $col1 = '';
     $col2 = '';
@@ -372,15 +312,15 @@ function show_members_col($groupid) {
         $rs = $DB->get_recordset_list('user', 'id', $members, 'lastname');
         if ($rs->valid()) {
             foreach ($rs as $user) {
-                $txt = '<div class="user-col">'
-                       .'<div class="user-col-pic">'
-                       .$OUTPUT->user_picture($user, array('courseid' => $COURSE->id))
-                       .'</div>'
-                       .'<div class="user-col-name">'
-                       .'<a href="'.$CFG->wwwroot.'/user/view.php?id='.$user->id.'&amp;course='.$COURSE->id.'">'.fullname($user,true).'</a>'
-                       .'</div>'
-                       .'</div>'
-                       .'<div class="choosegroup_clear"></div>';
+                $txt = '<div class="user-col">'.
+                       '<div class="user-col-pic">'.
+                       $OUTPUT->user_picture($user, array('courseid' => $COURSE->id)).
+                       '</div>'.
+                       '<div class="user-col-name">'.
+                       '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$user->id.'&amp;course='.$COURSE->id.'">'.fullname($user,true).'</a>'.
+                       '</div>'.
+                       '</div>'.
+                       '<div class="choosegroup_clear"></div>';
                 $position += 1;
                 if ($position === 1) {
                     $col1 .= $txt;
@@ -393,13 +333,15 @@ function show_members_col($groupid) {
             }
         }
         $rs->close();
-        echo '<div class="user-group-col">'.$col1.'</div>';
-        echo '<div class="user-group-col">'.$col2.'</div>';
-        echo '<div class="user-group-col">'.$col3.'</div>';
+        $output .= '<div class="user-group-col">'.$col1.'</div>';
+        $output .= '<div class="user-group-col">'.$col2.'</div>';
+        $output .= '<div class="user-group-col">'.$col3.'</div>';
     } else {
-        print_string('nomembers', 'choosegroup');
+        $output .= get_string('nomembers', 'choosegroup');
     }
-    echo '<div class="choosegroup_clear"></div>';
+    $output .= '<div class="choosegroup_clear"></div>';
+
+    return $output;
 }
 
 /**
