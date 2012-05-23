@@ -47,9 +47,9 @@ class mod_choosegroup_renderer extends plugin_renderer_base {
                 $output .= '<div class="choosegroup_right"><b>' . get_string('groupmembers', 'choosegroup') . ':</b></div>';
             }
             $output .= '<div class="choosegroup_clear"></div>';
-            $output .= '<form method="post" action="' . s($url->out()) . '">'
-            . '<input type="hidden" name="sesskey" value="'
-            . sesskey() . '"/>';
+            $output .= '<form method="post" action="' . s($url->out()) . '">'.
+                       '<input type="hidden" name="sesskey" value="'.
+                       sesskey() . '"/>';
             foreach ($groups as $key => $group) {
                 $vacancies = '';
                 $disabled = '';
@@ -75,10 +75,10 @@ class mod_choosegroup_renderer extends plugin_renderer_base {
                     $vacancies = '(' . get_string('currentgroup', 'choosegroup') . ')';
                 }
 
-                $checkbox = "<input $disabled type=\"radio\" name=\"group\" "
-                . "id=\"group-{$group->id}\" value=\"{$group->id}\" />";
-                $label = "<label $dimmed for=\"group-{$group->id}\">"
-                . s($group->name) . " $vacancies</label>";
+                $checkbox = "<input $disabled type=\"radio\" name=\"group\" ".
+                            "id=\"group-{$group->id}\" value=\"{$group->id}\" />";
+                $label = "<label $dimmed for=\"group-{$group->id}\">".
+                         s($group->name) . " $vacancies</label>";
                 $members = '';
                 $hr = '';
                 if ($choosegroup->showmembers < CHOOSEGROUP_AFTER) {
@@ -88,8 +88,8 @@ class mod_choosegroup_renderer extends plugin_renderer_base {
                 $output .= "<div class=\"choosegroup_left\">$checkbox $label</div> $members";
                 $output .= "<div class=\"choosegroup_clear\">$hr</div>";
             }
-            $output .= '<input type="submit" value="' . get_string('submit') . '"/>'
-            .'</form>';
+            $output .= '<input type="submit" value="' . get_string('submit') . '"/>'.
+                       '</form>';
         }
         return $output;
     }
