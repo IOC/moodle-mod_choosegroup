@@ -20,6 +20,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 $capabilities = array(
 
+	'mod/choosegroup:addinstance' => array(
+        'riskbitmask' => RISK_XSS,
+
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array(
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        ),
+        'clonepermissionsfrom' => 'moodle/course:manageactivities'
+    ),
+
     'mod/choosegroup:choose' => array(
 
         'captype' => 'write',
