@@ -41,19 +41,18 @@ function groups_assigned($choosegroup) {
 
     $groups = array();
     foreach ($records as $record){
-        $group = new stdClass();
-        $group->id = $record->id;
-        $group->name = $record->name;
-        $groups[$group->id] = $group;
+         if (array_key_exists($record->id, $groupsok)){
+            $group = new stdClass();
+            $group->id = $record->id;
+            $group->name = $record->name;
+            $groups[$group->id] = $group;
+        }
     }
-
     foreach ($groupsok as $groupok) {
-        if (array_key_exists($groupok->groupid, $groups)){
             $groups[$groupok->groupid]->members = $DB->count_records('groups_members',
                                              array('groupid' => $groupok->groupid));
             $groups[$groupok->groupid]->vacancies = max(array(0, $groupok->maxlimit - $groups[$groupok->groupid]->members));
             $groups[$groupok->groupid]->maxlimit = $groupok->maxlimit;
-        }
     }
 
     return $groups;
