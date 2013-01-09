@@ -53,16 +53,16 @@ $is_open = ((!$choosegroup->timeopen || $choosegroup->timeopen <= time()) &&
 (!$choosegroup->timeclose || $choosegroup->timeclose > time()));
 
 //Info about grups
-$groups = groups_assigned($choosegroup);
+$groups = choosegroup_groups_assigned($choosegroup);
 
 //Get the group selected by student
-$chosen = chosen($groups);
+$chosen = choosegroup_chosen($groups);
 $data = data_submitted();
 
 //Check whether there's data submited
 if (!empty($data->group)) {
     if ($can_choose && $is_open) {
-        choose($choosegroup, $groups, (int) $data->group, $chosen);
+        choosegroup_choose($choosegroup, $groups, (int) $data->group, $chosen);
     }
     add_to_log($course->id, 'choosegroup', 'choose', "view.php?id={$cm->id}", "$data->group", $cm->id, $USER->id);
 
@@ -143,7 +143,7 @@ if ($can_choose) {
             echo $renderer->print_form($groups,'chooseagroup', $choosegroup, $url, $chosen->id);
             if ($choosegroup->showmembers == CHOOSEGROUP_AFTER){
                 echo '<p class="choosegroup_center"><u>'.get_string('owngroupmembers', 'choosegroup', $chosen->name).'</u></p>';
-                echo show_members($chosen->id, $choosegroup->shownames, 'show-users-group');
+                echo choosegroup_show_members($chosen->id, $choosegroup->shownames, 'show-users-group');
             }
         } else {
             echo '<p>'.get_string('groupchosen', 'choosegroup', $chosen->name).'</p>';
@@ -151,9 +151,9 @@ if ($can_choose) {
             (!$is_open && $choosegroup->showmembers < CHOOSEGROUP_NEVER)) {
                 echo '<p class="choosegroup_center"><u>'.get_string('owngroupmembers', 'choosegroup', $chosen->name).'</u></p>';
                 if ($choosegroup->shownames){
-                  echo show_members_col($chosen->id);
+                  echo choosegroup_show_members_col($chosen->id);
                 } else {
-                  echo show_members($chosen->id, $choosegroup->shownames, 'user-col');
+                  echo choosegroup_show_members($chosen->id, $choosegroup->shownames, 'user-col');
                 }
             }
         }

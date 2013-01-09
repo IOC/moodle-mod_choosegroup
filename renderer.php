@@ -82,7 +82,7 @@ class mod_choosegroup_renderer extends plugin_renderer_base {
                 $members = '';
                 $hr = '';
                 if ($choosegroup->showmembers < CHOOSEGROUP_AFTER) {
-                    $members = show_members($group->id, $choosegroup->shownames);
+                    $members = choosegroup_show_members($group->id, $choosegroup->shownames);
                     $hr ='<hr />';
                 }
                 $output .= "<div class=\"choosegroup_left\">$checkbox $label</div> $members";

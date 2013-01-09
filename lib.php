@@ -25,7 +25,7 @@
  * @param object $choosegroup
  * @return array Info about groups
  */
-function groups_assigned($choosegroup) {
+function choosegroup_groups_assigned($choosegroup) {
     global $COURSE, $DB;
 
     if(!$groupsok = $DB->get_records_sql("SELECT g.groupid,g.maxlimit
@@ -68,7 +68,7 @@ function groups_assigned($choosegroup) {
  * @param int $groupid
  * @param object $currentgroup
  */
-function choose($choosegroup, $groups, $groupid, $currentgroup) {
+function choosegroup_choose($choosegroup, $groups, $groupid, $currentgroup) {
     global $DB, $USER;
 
     if (!confirm_sesskey()){
@@ -232,7 +232,7 @@ function choosegroup_update_instance($choosegroup) {
  * @param object $groups
  * @return object if user has a group, bool false if not.
  */
-function chosen($groups){
+function choosegroup_chosen($groups){
     global $DB, $USER;
     if (empty($groups)){
         return false;
@@ -260,7 +260,7 @@ function chosen($groups){
  * @param bool $shownames
  * @param string $class
  */
-function show_members($groupid, $shownames, $class='users-group') {
+function choosegroup_show_members($groupid, $shownames, $class='users-group') {
     global $CFG, $DB, $COURSE, $OUTPUT;
 
     $members = $DB->get_fieldset_select('groups_members', 'userid', 'groupid = '. $groupid);
@@ -297,7 +297,7 @@ function show_members($groupid, $shownames, $class='users-group') {
  * @global object
  * @param int $groupid
  */
-function show_members_col($groupid) {
+function choosegroup_show_members_col($groupid) {
     global $CFG, $COURSE, $DB, $OUTPUT;
 
     $output = '';
