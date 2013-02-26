@@ -38,7 +38,7 @@ class backup_choosegroup_activity_structure_step extends backup_activity_structu
 
         // Define each element separated
         $choosegroup = new backup_nested_element('choosegroup', array('id'), array(
-            'name', 'intro', 'showmembers', 'allowupdate',
+            'name', 'intro', 'introformat', 'showmembers', 'allowupdate',
             'timeopen', 'timeclose', 'timecreated', 'timemodified'));
 
         $groups = new backup_nested_element('groups');

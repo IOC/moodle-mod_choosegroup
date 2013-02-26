@@ -56,7 +56,7 @@ class moodle1_mod_choosegroup_handler extends moodle1_mod_handler {
                 'choosegroup', '/MOODLE_BACKUP/COURSE/MODULES/MOD/CHOOSEGROUP',
                 array(
                     'newfields' => array(
-                        'introformat' => 0
+                        'introformat' => 1
                     ),
                     'dropfields' => array(
                         'modtype',
