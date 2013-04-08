@@ -6,6 +6,7 @@ $string['allowupdate_help'] = 'This option allows you to restrict students from 
 Students can change their choice before activity is closed.';
 $string['changegroup'] = ' You are allowed to change your group';
 $string['chooseagroup'] = 'Choose a group';
+$string['choosegroup:addinstance'] = 'Add a new choosegroup';
 $string['choosegroup:choose'] = 'Choose group';
 $string['currentgroup'] = 'Current group';
 $string['groupchosen'] = 'Group chosen: <strong>{$a}</strong>';

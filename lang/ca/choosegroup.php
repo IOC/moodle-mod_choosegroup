@@ -5,6 +5,7 @@ $string['allowupdate'] = 'Permet canviar de grup';
 $string['allowupdate_help'] = 'Indica si es permet o no, que els alumnes pugin canviar la seva opció mentre l\'activitat estigui oberta.';
 $string['changegroup'] = ' Si voleu podeu canviar de grup';
 $string['chooseagroup'] = 'Tria un grup';
+$string['choosegroup:addinstance'] = 'Afegeix un tria grup nou';
 $string['choosegroup:choose'] = 'Tria grup';
 $string['currentgroup'] = 'Grup actual';
 $string['groupchosen'] = 'Esteu assignat al grup: <strong>{$a}</strong>';

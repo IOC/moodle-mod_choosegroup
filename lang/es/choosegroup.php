@@ -5,6 +5,7 @@ $string['allowupdate'] = 'Permite cambiar de grupo';
 $string['allowupdate_help'] = 'Indica si se permite o no, que los estudiantes puedan cambiar de opción mientras la actividad esté abierta.';
 $string['changegroup'] = ' Si quiere puede volver a cambiar de grupo';
 $string['chooseagroup'] = 'Escoge un grupo';
+$string['choosegroup:addinstance'] = 'Añade un escoge grupo nuevo';
 $string['choosegroup:choose'] = 'Escoge grupo';
 $string['currentgroup'] = 'Grupo actual';
 $string['groupchosen'] = 'Esta assignado al grupo: <strong>{$a}</strong>';
