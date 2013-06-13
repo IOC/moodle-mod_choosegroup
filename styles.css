@@ -24,66 +24,76 @@
 }
 
 .choosegroup_center{
-text-align:center;
+    text-align:center;
 }
 
 .choosegroup_left{
-float: left;
-position: relative;
-margin-bottom: 10px;
+    float: left;
+    position: relative;
+    margin-bottom: 10px;
 }
 
 .choosegroup_right{
-float: right;
-position: relative;
-width:70%;
-margin-bottom: 10px;
-}
+    float: right;
+    position: relative;
+    width: 70%;
+    margin-bottom: 10px;
+    }
 
 .show-users-group{
-margin-top: 20px;
-width:100%;
+    margin-top: 20px;
+    width: 100%;
 }
 
 .users-group{
-float: right;
-position: relative;
-width:70%;
+    float: right;
+    position: relative;
+    width: 70%;
 }
 
 .choosegroup_clear{
-clear: both;
+    clear: both;
 }
 
 .choosegroup-table{
- border:0 none;
+    border: 0 none;
 }
 
 .user-group{
-float: left;
-position: relative;
+    float: left;
+    position: relative;
 }
 
 .user-group-names{
-width:150px;
-padding-bottom: 3px;
-float: left;
-position: relative;
+    width: 150px;
+    padding-bottom: 3px;
+    float: left;
+    position: relative;
+}
+
+.user-group-names img,
+.user-col-pic img{
+    vertical-align: middle;
+}
+
+.user-group-names .user-name{
+    margin-left: 4px;
 }
 
 .user-col{
-width:100%;
+    width: 100%;
 }
 
 .user-col-pic{
-float:left;
+    float: left;
 }
 
 .user-col-name{
-overflow:hidden;
+    overflow: hidden;
+    padding-left: 4px;
 }
 
 .user-group-col{
-float:left;
-width:33%;
+    float: left;
+    width: 33%;
 }

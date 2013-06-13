@@ -134,7 +134,7 @@ if ($can_choose) {
         echo $OUTPUT->box(get_string('activityclosed', 'choosegroup', userdate($choosegroup->timeclose)), "generalbox boxaligncenter main");
     }
 
-    echo $OUTPUT->box_start("generalbox boxaligncenter $main");
+    echo $OUTPUT->box_start("boxaligncenter $main");
 
     if ($chosen !== false) {
         if ($is_open && $choosegroup->allowupdate) {

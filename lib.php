@@ -273,7 +273,8 @@ function choosegroup_show_members($groupid, $shownames, $class='users-group') {
                 $output .= '<div class="'.$class.'">';
                 $output .= $OUTPUT->user_picture($user, array('courseid' => $COURSE->id));
                 if ($shownames) {
-                    $output .= '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$user->id.'&amp;course='.$COURSE->id.'">'.fullname($user).'</a>';
+                    $output .= '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$user->id.'&amp;course='
+                        . $COURSE->id.'" class="user-name">'.fullname($user).'</a>';
                 }
                 $output .= '</div>';
             }
