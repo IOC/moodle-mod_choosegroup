@@ -75,10 +75,13 @@ class mod_choosegroup_mod_form extends moodleform_mod {
                 $buttonarray=array();
                 $buttonarray[] =& $mform->createElement('text', 'lgroup['.$group->id.']',get_string('grouplimit','choosegroup'), array('size' => 4));
                 $buttonarray[] =& $mform->createElement('checkbox', 'ugroup['.$group->id.']','',' '.get_string('nolimit','choosegroup'));
+                $mform->setType('lgroup['.$group->id.']', PARAM_INT);
+                $mform->setType('ugroup['.$group->id.']', PARAM_INT);
                 $mform->addGroup($buttonarray, 'groupelement', $group->name, array(' '), false);
                 $mform->disabledIf('lgroup['.$group->id.']', 'ugroup['.$group->id.']', 'checked');
                 $mform->setDefault('lgroup['.$group->id.']', 0);
                 $mform->addElement('hidden', 'groupid['.$group->id.']', '');
+                $mform->setType('groupid['.$group->id.']', PARAM_INT);
             }
         }
 
