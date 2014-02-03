@@ -44,3 +44,4 @@ $string['timeclose'] = 'Closing date';
 $string['timeopen'] = 'Opening date';
 $string['vacancies'] = '{$a} vacancies';
 $string['vacancy'] = '{$a} vacancy';
+$string['completionchoosegroup'] = 'Student must choose a group';
