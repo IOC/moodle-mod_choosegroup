@@ -44,3 +44,4 @@ $string['timeclose'] = 'Data de tancament';
 $string['timeopen'] = 'Data d\'obertura';
 $string['vacancies'] = '{$a} places lliures';
 $string['vacancy'] = '{$a} plaça lliure';
+$string['completionchoosegroup'] = 'L\'alumne ha d\'haver triat un grup.';

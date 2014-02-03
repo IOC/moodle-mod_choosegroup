@@ -45,3 +45,4 @@ $string['timeclose'] = 'Fecha de cierre';
 $string['timeopen'] = 'Fecha de inicio';
 $string['vacancies'] = '{$a} plazas libres';
 $string['vacancy'] = '{$a} plaza libre';
+$string['completionchoosegroup'] = 'El alumno tiene que haber escogido un grupo';
