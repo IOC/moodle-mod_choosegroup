@@ -103,5 +103,21 @@ function xmldb_choosegroup_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2012010900, 'choosegroup');
     }
 
+    if ($oldversion < 2014013000) {
+
+        // Define field completionchoosegroup to be added to choosegroup.
+        $table = new xmldb_table('choosegroup');
+        $field = new xmldb_field('completionchoosegroup', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0', 'shownames');
+
+        // Conditionally launch add field completionchoosegroup.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Choosegroup savepoint reached.
+        upgrade_mod_savepoint(true, 2014013000, 'choosegroup');
+    }
+
+
     return true;
 }
