@@ -1,4 +1,4 @@
-<?php
+.<?php
 /* Copyright © 2011 Institut Obert de Catalunya
 
    This file is part of Choose Group.
@@ -106,5 +106,30 @@ class mod_choosegroup_mod_form extends moodleform_mod {
                 }
             }
         }
+    }
+
+    function get_data() {
+        $data = parent::get_data();
+        if (!$data) {
+            return false;
+        }
+        // Set up completion section even if checkbox is not ticked
+        if (!empty($data->completionunlocked)) {
+                if (empty($data->completionchoosegroup)) {
+                    $data->completionchoosegroup = 0;
+                }
+        }
+        return $data;
+    }
+
+    public function add_completion_rules() {
+        $mform =& $this->_form;
+
+        $mform->addElement('checkbox', 'completionchoosegroup', '', get_string('completionchoosegroup', 'choosegroup'));
+        return array('completionchoosegroup');
+    }
+
+    public function completion_rule_enabled($data) {
+        return !empty($data['completionchoosegroup']);
     }
 }

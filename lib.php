@@ -145,6 +145,7 @@ function choosegroup_delete_instance($id) {
 * @uses FEATURE_GROUPMEMBERSONLY
 * @uses FEATURE_MOD_INTRO
 * @uses FEATURE_COMPLETION_TRACKS_VIEWS
+* @uses FEATURE_COMPLETION_HAS_RULES
 * @uses FEATURE_GRADE_HAS_GRADE
 * @uses FEATURE_GRADE_OUTCOMES
 * @param string $feature FEATURE_xx constant for requested feature
@@ -232,14 +233,14 @@ function choosegroup_update_instance($choosegroup) {
  * @param object $groups
  * @return object if user has a group, bool false if not.
  */
-function choosegroup_chosen($groups){
+function choosegroup_chosen($groups, $userid){
     global $DB, $USER;
     if (empty($groups)){
         return false;
     }
     $info = new stdClass();
     foreach ($groups as $id => $group){
-        if($DB->record_exists('groups_members', array('groupid' => $id, 'userid' => $USER->id))) {
+        if($DB->record_exists('groups_members', array('groupid' => $id, 'userid' => $userid))) {
             $info->id = $id;
             $info->name = $group->name;
             return $info;
@@ -357,4 +358,39 @@ $params = array('courseid' => $object->courseid, 'groupid' => $object->id);
 $choosegroupselect = "IN (SELECT c.id FROM {choosegroup} c WHERE c.course = :courseid)";
 
 $DB->delete_records_select('choosegroup_group', "groupid = :groupid AND choosegroupid $choosegroupselect", $params);
+}
+
+/**
+ * Obtains the automatic completion state for this module based on any conditions
+ * in assign settings.
+ *
+ * @param object $course Course
+ * @param object $cm Course-module
+ * @param int $userid User ID
+ * @param bool $type Type of comparison (or/and; can be used as return value if no conditions)
+ * @return bool True if completed, false if not, $type if conditions not set.
+ */
+
+function choosegroup_get_completion_state($course,$cm,$userid,$type) {
+    global $DB;
+
+    if (!$choosegroup = $DB->get_record('choosegroup', array('id' => $cm->instance))){
+       print_error('invalidcoursemodule');
+    }
+
+    $result=$type;
+
+    if ($choosegroup->completionchoosegroup) {
+        $groups = choosegroup_groups_assigned($choosegroup);
+        $chosen = choosegroup_chosen($groups, $userid);
+
+        //Get the group selected by student
+
+        if ($type == COMPLETION_AND) { echo "COMPLETION AND";
+            $result = $result && $chosen;
+        } else { echo "COMPLETION OR";
+            $result = $result || $chosen;
+        }
+    }
+    return $result;
 }
