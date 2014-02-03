@@ -19,6 +19,8 @@
 
 require_once('../../config.php');
 require_once('lib.php');
+require_once($CFG->libdir.'/completionlib.php');
+
 
 define('CHOOSEGROUP_BEFORE', 0);
 define('CHOOSEGROUP_AFTER', 1);
@@ -56,13 +58,18 @@ $is_open = ((!$choosegroup->timeopen || $choosegroup->timeopen <= time()) &&
 $groups = choosegroup_groups_assigned($choosegroup);
 
 //Get the group selected by student
-$chosen = choosegroup_chosen($groups);
+$chosen = choosegroup_chosen($groups, $USER->id);
 $data = data_submitted();
 
 //Check whether there's data submited
 if (!empty($data->group)) {
     if ($can_choose && $is_open) {
         choosegroup_choose($choosegroup, $groups, (int) $data->group, $chosen);
+        // Update completion state
+        $completion=new completion_info($course);
+        if($completion->is_enabled($cm) && $choosegroup->completionchoosegroup) {
+            $completion->update_state($cm,COMPLETION_COMPLETE);
+        }
     }
     add_to_log($course->id, 'choosegroup', 'choose', "view.php?id={$cm->id}", "$data->group", $cm->id, $USER->id);
 
@@ -80,6 +87,10 @@ $PAGE->set_context($context);
 
 // Output starts here
 echo $OUTPUT->header();
+
+// View for completion
+$completion = new completion_info($course);
+$completion->set_module_viewed($cm);
 
 /************************ INTRO ************************/
 if ($choosegroup->intro) {
