@@ -19,8 +19,9 @@
  *
  * @package    mod
  * @subpackage choosegroup
- * @copyright  2011 Marc Català <mcatala@ioc.cat>
+ * @copyright  2013 Institut Obert de Catalunya
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Marc Català <mcatala@ioc.cat>
  */
 
 defined('MOODLE_INTERNAL') || die();

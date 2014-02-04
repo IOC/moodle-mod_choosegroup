@@ -1,29 +1,30 @@
 <?php
-
-// Copyright © 2011 Institut Obert de Catalunya
-
-// This file is part of Choose Group.
-
-// Choose Group is free software: you can redistribute it and/or modify
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-
-// Choose Group is distributed in the hope that it will be useful,
+//
+// Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-
+//
 // You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Moodle renderer used to display special elements of the lesson module
+ * A custom renderer class that extends the plugin_renderer_base and is used by the choosegroup module.
  *
- * @package   Choosegroup
- * @copyright 2012 Marc Català <mcatala@ioc.cat>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- **/
+ * @package    mod
+ * @subpackage choosegroup
+ * @copyright  2013 Institut Obert de Catalunya
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Albert Gasset <albert.gasset@gmail.com>
+ * @author     Marc Català <reskit@gmail.com>
+ * @author     Manuel Cagigas <sedras@gmail.com>
+ */
 
 class mod_choosegroup_renderer extends plugin_renderer_base {
     /**
@@ -36,7 +37,8 @@ class mod_choosegroup_renderer extends plugin_renderer_base {
      * @param int $groupid
      * @return string
      */
-    function print_form($groups, $message, $choosegroup, $url, $groupid = false) {
+
+    public function print_form($groups, $message, $choosegroup, $url, $groupid = false) {
         $output = '';
 
         if (empty($groups)) {
@@ -59,8 +61,7 @@ class mod_choosegroup_renderer extends plugin_renderer_base {
                         $disabled = 'disabled="disabled"';
                         $dimmed = 'class="dimmed"';
                         $vacancies = '(' .  get_string('novacancies', 'choosegroup'). ')';
-                    }
-                    else if ($group->vacancies > 1) {
+                    } else if ($group->vacancies > 1) {
                         $vacancies = '(' .  get_string('vacancies', 'choosegroup',
                                 $group->vacancies) . ')';
                     } else {
@@ -83,7 +84,7 @@ class mod_choosegroup_renderer extends plugin_renderer_base {
                 $hr = '';
                 if ($choosegroup->showmembers < CHOOSEGROUP_AFTER) {
                     $members = choosegroup_show_members($group->id, $choosegroup->shownames);
-                    $hr ='<hr />';
+                    $hr = '<hr />';
                 }
                 $output .= "<div class=\"choosegroup_left\">$checkbox $label</div> $members";
                 $output .= "<div class=\"choosegroup_clear\">$hr</div>";

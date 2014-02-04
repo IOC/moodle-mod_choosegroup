@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,10 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package moodlecore
- * @subpackage backup-moodle2
- * @copyright 2010 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    mod
+ * @subpackage choosegroup
+ * @copyright  2013 Institut Obert de Catalunya
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Marc Català <reskit@gmail.com>
  */
 
 require_once($CFG->dirroot . '/mod/choosegroup/backup/moodle2/backup_choosegroup_stepslib.php'); // Because it exists (must)
@@ -52,15 +52,15 @@ class backup_choosegroup_activity_task extends backup_activity_task {
     static public function encode_content_links($content) {
         global $CFG;
 
-        $base = preg_quote($CFG->wwwroot,"/");
+        $base = preg_quote($CFG->wwwroot, "/");
 
         // Link to the list of choosegroups
-        $search="/(".$base."\/mod\/choosegroup\/index.php\?id\=)([0-9]+)/";
-        $content= preg_replace($search, '$@CHOOSEGROUPINDEX*$2@$', $content);
+        $search = "/(".$base."\/mod\/choosegroup\/index.php\?id\=)([0-9]+)/";
+        $content = preg_replace($search, '$@CHOOSEGROUPINDEX*$2@$', $content);
 
         // Link to choosegroup view by moduleid
-        $search="/(".$base."\/mod\/choosegroup\/view.php\?id\=)([0-9]+)/";
-        $content= preg_replace($search, '$@CHOOSEGROUPVIEWBYID*$2@$', $content);
+        $search = "/(".$base."\/mod\/choosegroup\/view.php\?id\=)([0-9]+)/";
+        $content = preg_replace($search, '$@CHOOSEGROUPVIEWBYID*$2@$', $content);
 
         return $content;
     }
