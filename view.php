@@ -1,21 +1,30 @@
 <?php
-/* Copyright © 2011 Institut Obert de Catalunya
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-   This file is part of Choose Group.
-
-   Choose Group is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   Choose Group is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+/**
+ * Main view for choosegroup mod
+ *
+ * @package    mod
+ * @subpackage choosegroup
+ * @copyright  2013 Institut Obert de Catalunya
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Albert Gasset <albert.gasset@gmail.com>
+ * @author     Marc Català <reskit@gmail.com>
+ * @author     Manuel Cagigas <sedras@gmail.com>
+ */
 
 require_once('../../config.php');
 require_once('lib.php');
@@ -30,7 +39,7 @@ define('CHOOSEGROUP_NEVER', 3);
 $id = required_param('id', PARAM_INT);  // Course Module ID
 
 
-$url = new moodle_url('/mod/choosegroup/view.php', array('id'=>$id));
+$url = new moodle_url('/mod/choosegroup/view.php', array('id' => $id));
 $PAGE->set_url($url);
 
 if (! $cm = get_coursemodule_from_id('choosegroup', $id)) {
@@ -43,32 +52,32 @@ if (! $course = $DB->get_record("course", array('id' => $cm->course))) {
 
 require_course_login($course, false, $cm);
 
-if (!$choosegroup = $DB->get_record('choosegroup', array('id' => $cm->instance))){
+if (!$choosegroup = $DB->get_record('choosegroup', array('id' => $cm->instance))) {
     print_error('invalidcoursemodule');
 }
 
 $context = context_module::instance($cm->id);
 
-$can_choose = has_capability('mod/choosegroup:choose', $context, null, false);
+$canchoose = has_capability('mod/choosegroup:choose', $context, null, false);
 
-$is_open = ((!$choosegroup->timeopen || $choosegroup->timeopen <= time()) &&
+$isopen = ((!$choosegroup->timeopen || $choosegroup->timeopen <= time()) &&
 (!$choosegroup->timeclose || $choosegroup->timeclose > time()));
 
-//Info about grups
+// Info about grups
 $groups = choosegroup_groups_assigned($choosegroup);
 
-//Get the group selected by student
+// Get the group selected by student
 $chosen = choosegroup_chosen($groups, $USER->id);
 $data = data_submitted();
 
-//Check whether there's data submited
+// Check whether there's data submited
 if (!empty($data->group)) {
-    if ($can_choose && $is_open) {
+    if ($canchoose && $isopen) {
         choosegroup_choose($choosegroup, $groups, (int) $data->group, $chosen);
         // Update completion state
-        $completion=new completion_info($course);
-        if($completion->is_enabled($cm) && $choosegroup->completionchoosegroup) {
-            $completion->update_state($cm,COMPLETION_COMPLETE);
+        $completion = new completion_info($course);
+        if ($completion->is_enabled($cm) && $choosegroup->completionchoosegroup) {
+            $completion->update_state($cm, COMPLETION_COMPLETE);
         }
     }
     add_to_log($course->id, 'choosegroup', 'choose', "view.php?id={$cm->id}", "$data->group", $cm->id, $USER->id);
@@ -98,7 +107,7 @@ if ($choosegroup->intro) {
     echo $OUTPUT->box(format_module_intro('choosegroup', $choosegroup, $cm->id), 'generalbox', 'intro');
 }
 /************************ PRINT DATES ************************/
-if ($is_open && ($choosegroup->timeopen || $choosegroup->timeclose)) {
+if ($isopen && ($choosegroup->timeopen || $choosegroup->timeclose)) {
     echo $OUTPUT->box_start('generalbox boxaligncenter', 'dates');
     $table = new html_table();
     $row = new html_table_row();
@@ -106,23 +115,23 @@ if ($is_open && ($choosegroup->timeopen || $choosegroup->timeclose)) {
     $rows = array();
     if ($choosegroup->timeopen) {
         $cell = new html_table_cell();
-        $cell->text = get_string('timeopen','choosegroup').':';
-        $cell->attributes = array('class'=>'c0');
+        $cell->text = get_string('timeopen', 'choosegroup').':';
+        $cell->attributes = array('class' => 'c0');
         $columns[] = $cell;
         $cell = new html_table_cell();
         $cell->text = userdate($choosegroup->timeopen);
-        $cell->attributes = array('class'=>'c1');
+        $cell->attributes = array('class' => 'c1');
         $columns[] = $cell;
         $row->cells = $columns;
     }
     if ($choosegroup->timeclose) {
         $cell = new html_table_cell();
-        $cell->text = get_string('timeclose','choosegroup').':';
-        $cell->attributes = array('class'=>'c0');
+        $cell->text = get_string('timeclose', 'choosegroup').':';
+        $cell->attributes = array('class' => 'c0');
         $columns[] = $cell;
         $cell = new html_table_cell();
         $cell->text = userdate($choosegroup->timeclose);
-        $cell->attributes = array('class'=>'c1');
+        $cell->attributes = array('class' => 'c1');
         $columns[] = $cell;
         $row->cells = $columns;
     }
@@ -133,44 +142,44 @@ if ($is_open && ($choosegroup->timeopen || $choosegroup->timeclose)) {
     echo $OUTPUT->box_end();
 }
 
-if ($can_choose) {
+if ($canchoose) {
     $renderer = $PAGE->get_renderer('mod_choosegroup');
     $main = 'main';
-    if (($chosen === false && $is_open && $choosegroup->showmembers < CHOOSEGROUP_AFTER) ||
-    ($chosen !== false && $is_open && $choosegroup->showmembers < CHOOSEGROUP_CLOSED) ||
-    ($chosen !== false && !$is_open && $choosegroup->showmembers < CHOOSEGROUP_NEVER)) {
+    if (($chosen === false && $isopen && $choosegroup->showmembers < CHOOSEGROUP_AFTER) ||
+    ($chosen !== false && $isopen && $choosegroup->showmembers < CHOOSEGROUP_CLOSED) ||
+    ($chosen !== false && !$isopen && $choosegroup->showmembers < CHOOSEGROUP_NEVER)) {
         $main = 'main2';
     }
-    if ($chosen !== false && !$is_open){
+    if ($chosen !== false && !$isopen) {
         echo $OUTPUT->box(get_string('activityclosed', 'choosegroup', userdate($choosegroup->timeclose)), "generalbox boxaligncenter main");
     }
 
     echo $OUTPUT->box_start("boxaligncenter $main");
 
     if ($chosen !== false) {
-        if ($is_open && $choosegroup->allowupdate) {
+        if ($isopen && $choosegroup->allowupdate) {
             echo '<p>'.get_string('groupchosen', 'choosegroup', $chosen->name).
-				' ('. get_string('changegroup', 'choosegroup', $chosen->name). ' )</p>';
-            echo $renderer->print_form($groups,'chooseagroup', $choosegroup, $url, $chosen->id);
-            if ($choosegroup->showmembers == CHOOSEGROUP_AFTER){
+                ' ('. get_string('changegroup', 'choosegroup', $chosen->name). ' )</p>';
+            echo $renderer->print_form($groups, 'chooseagroup', $choosegroup, $url, $chosen->id);
+            if ($choosegroup->showmembers == CHOOSEGROUP_AFTER) {
                 echo '<p class="choosegroup_center"><u>'.get_string('owngroupmembers', 'choosegroup', $chosen->name).'</u></p>';
                 echo choosegroup_show_members($chosen->id, $choosegroup->shownames, 'show-users-group');
             }
         } else {
             echo '<p>'.get_string('groupchosen', 'choosegroup', $chosen->name).'</p>';
-            if (($is_open && $choosegroup->showmembers < CHOOSEGROUP_CLOSED) ||
-            (!$is_open && $choosegroup->showmembers < CHOOSEGROUP_NEVER)) {
+            if (($isopen && $choosegroup->showmembers < CHOOSEGROUP_CLOSED) ||
+            (!$isopen && $choosegroup->showmembers < CHOOSEGROUP_NEVER)) {
                 echo '<p class="choosegroup_center"><u>'.get_string('owngroupmembers', 'choosegroup', $chosen->name).'</u></p>';
-                if ($choosegroup->shownames){
-                  echo choosegroup_show_members_col($chosen->id);
+                if ($choosegroup->shownames) {
+                    echo choosegroup_show_members_col($chosen->id);
                 } else {
-                  echo choosegroup_show_members($chosen->id, $choosegroup->shownames, 'user-col');
+                    echo choosegroup_show_members($chosen->id, $choosegroup->shownames, 'user-col');
                 }
             }
         }
     } else {
-        if ($is_open) {
-            echo $renderer->print_form($groups,'chooseagroup', $choosegroup, $url);
+        if ($isopen) {
+            echo $renderer->print_form($groups, 'chooseagroup', $choosegroup, $url);
         } else {
             print_string('activityclosed', 'choosegroup', userdate($choosegroup->timeclose));
         }

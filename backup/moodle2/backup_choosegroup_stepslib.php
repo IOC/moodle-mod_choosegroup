@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,10 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package moodlecore
- * @subpackage backup-moodle2
- * @copyright 2010 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
+ * @package mod
+ * @subpackage choosegroup
+ * @copyright 2013 Institut Obert de Catalunya
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author    Marc Català <reskit@gmail.com>
+ * @author    Manuel Cagigas <sedras@gmail.com>
  */
 
 /**
@@ -38,7 +39,7 @@ class backup_choosegroup_activity_structure_step extends backup_activity_structu
 
         // Define each element separated
         $choosegroup = new backup_nested_element('choosegroup', array('id'), array(
-            'name', 'intro', 'introformat', 'showmembers', 'allowupdate',
+            'name', 'intro', 'introformat', 'showmembers', 'allowupdate', 'completionchoosegroup',
             'timeopen', 'timeclose', 'timecreated', 'timemodified'));
 
         $groups = new backup_nested_element('groups');
@@ -64,7 +65,6 @@ class backup_choosegroup_activity_structure_step extends backup_activity_structu
 
         // Define file annotations
         $choosegroup->annotate_files('mod_choosegroup', 'intro', null); // This file area hasn't itemid
-
 
         // Return the root element (choosegroup), wrapped into standard activity structure
         return $this->prepare_activity_structure($choosegroup);
