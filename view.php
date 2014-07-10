@@ -94,12 +94,12 @@ $PAGE->set_title(format_string($choosegroup->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($context);
 
-// Output starts here
-echo $OUTPUT->header();
-
 // View for completion
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
+
+// Output starts here
+echo $OUTPUT->header();
 
 /************************ INTRO ************************/
 if ($choosegroup->intro) {
