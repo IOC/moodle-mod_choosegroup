@@ -60,8 +60,10 @@ $context = context_module::instance($cm->id);
 
 $canchoose = has_capability('mod/choosegroup:choose', $context, null, false);
 
-$isopen = ((!$choosegroup->timeopen || $choosegroup->timeopen <= time()) &&
-(!$choosegroup->timeclose || $choosegroup->timeclose > time()));
+$now = time();
+
+$isopen = ((!$choosegroup->timeopen || $choosegroup->timeopen <= $now) &&
+(!$choosegroup->timeclose || $choosegroup->timeclose > $now));
 
 // Info about grups
 $groups = choosegroup_groups_assigned($choosegroup);
@@ -151,7 +153,11 @@ if ($canchoose) {
         $main = 'main2';
     }
     if ($chosen !== false && !$isopen) {
-        echo $OUTPUT->box(get_string('activityclosed', 'choosegroup', userdate($choosegroup->timeclose)), "generalbox boxaligncenter main");
+        if ($choosegroup->timeopen > $now) {
+            echo $OUTPUT->box(get_string('notopenyet', 'choosegroup', userdate($choosegroup->timeopen)), "generalbox boxaligncenter main");
+        } else {
+            echo $OUTPUT->box(get_string('activityclosed', 'choosegroup', userdate($choosegroup->timeclose)), "generalbox boxaligncenter main");
+        }
     }
 
     echo $OUTPUT->box_start("boxaligncenter $main");
@@ -180,6 +186,8 @@ if ($canchoose) {
     } else {
         if ($isopen) {
             echo $renderer->print_form($groups, 'chooseagroup', $choosegroup, $url);
+        } else if ($choosegroup->timeopen > $now) {
+            print_string('notopenyet', 'choosegroup', userdate($choosegroup->timeopen));
         } else {
             print_string('activityclosed', 'choosegroup', userdate($choosegroup->timeclose));
         }

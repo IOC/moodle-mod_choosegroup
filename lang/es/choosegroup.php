@@ -48,6 +48,7 @@ $string['nocoursegroups'] = 'El curso actual no tiene grupos creados.';
 $string['nogroups'] = 'No hay ningún grupo disponible';
 $string['nolimit'] = 'Sin límite';
 $string['nomembers'] = 'No hay miembros en este grup';
+$string['notopenyet'] = 'Lo sentimos, esta actividad no está disponible hasta {$a}';
 $string['novacancies'] = 'No hay plazas libres';
 $string['owngroupmembers'] = 'Miembros de su grupo';
 $string['pluginadministration'] = 'Escoge grup administración';

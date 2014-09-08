@@ -26,7 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$module->version   = 2014013000;            // The current module version (Date: YYYYMMDDXX)
+$module->version   = 2014090800;            // The current module version (Date: YYYYMMDDXX)
 $module->requires  = 2013051400;            // Moodle 2.5
 $module->component = 'mod_choosegroup';     // Full name of the plugin (used for diagnostics)
 $module->cron      = 0;                     // Period for cron to check this module (secs)

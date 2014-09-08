@@ -46,6 +46,7 @@ $string['nocoursegroups'] = 'El curs actual no té grups creats.';
 $string['nogroups'] = 'No hi ha cap grup disponible';
 $string['nolimit'] = 'Sense límit';
 $string['nomembers'] = 'No hi ha membres en aquest grup';
+$string['notopenyet'] = 'Disculpeu, aquesta activitat no estarà disponible fins a {$a}';
 $string['novacancies'] = 'No hi places lliures';
 $string['owngroupmembers'] = 'Membres del seu grup';
 $string['pluginadministration'] = 'Tria grup administració';
