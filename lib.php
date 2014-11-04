@@ -60,10 +60,12 @@ function choosegroup_groups_assigned($choosegroup) {
     }
 
     foreach ($groupsok as $groupok) {
+        if (isset($groups[$groupok->groupid])) {
             $groups[$groupok->groupid]->members = $DB->count_records('groups_members',
                                              array('groupid' => $groupok->groupid));
             $groups[$groupok->groupid]->vacancies = max(array(0, $groupok->maxlimit - $groups[$groupok->groupid]->members));
             $groups[$groupok->groupid]->maxlimit = $groupok->maxlimit;
+        }
     }
 
     return $groups;
