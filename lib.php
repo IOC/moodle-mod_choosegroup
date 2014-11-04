@@ -369,21 +369,6 @@ function choosegroup_show_members_col($groupid) {
 }
 
 /**
- * This function gets run whenever group is deleted from course
- *
- * @param object $object
- */
-function choosegroup_group_deleted($object) {
-
-    global $DB;
-
-    $params = array('courseid' => $object->courseid, 'groupid' => $object->id);
-    $choosegroupselect = "IN (SELECT c.id FROM {choosegroup} c WHERE c.course = :courseid)";
-
-    $DB->delete_records_select('choosegroup_group', "groupid = :groupid AND choosegroupid $choosegroupselect", $params);
-}
-
-/**
  * Obtains the automatic completion state for this module based on any conditions
  * in assign settings.
  *

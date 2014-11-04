@@ -15,18 +15,33 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Add event handlers for choosegroup
+ * Event observers used in choosegroup.
  *
- * @package    mod
- * @subpackage choosegroup
+ * @package    mod_choosegroup
  * @copyright  2014 Institut Obert de Catalunya
  * @author     Marc Català <reskit@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$observers = array(
-    array(
-        'eventname' => 'core\event\group_deleted',
-        'callback'  => 'mod_choosegroup_observer::group_deleted',
-    ),
-);
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Event observer for mod_choosegroup.
+ */
+class mod_choosegroup_observer {
+
+    /**
+     * Triggered via group_deleted event.
+     *
+     * @param \core\event\group_deleted $event
+     */
+    public static function group_deleted(\core\event\group_deleted $event) {
+        global $DB;
+
+        $group = $event->get_record_snapshot('groups', $event->objectid);
+        $params = array('courseid' => $group->courseid, 'groupid' => $group->id);
+        $choosegroupselect = "IN (SELECT c.id FROM {choosegroup} c WHERE c.course = :courseid)";
+
+        $DB->delete_records_select('choosegroup_group', "groupid = :groupid AND choosegroupid $choosegroupselect", $params);
+    }
+}
