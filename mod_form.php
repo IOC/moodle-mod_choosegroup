@@ -106,7 +106,11 @@ class mod_choosegroup_mod_form extends moodleform_mod {
 
     public function data_preprocessing(&$defaultvalues) {
         global $COURSE, $DB;
-        $groupsok = $DB->get_records('choosegroup_group', array('choosegroupid' => $this->_instance), 'groupid', 'id, groupid, maxlimit');
+
+        if (!$this->current->instance) {
+            return;
+        }
+        $groupsok = $DB->get_records('choosegroup_group', array('choosegroupid' => $this->current->instance), 'groupid', 'id, groupid, maxlimit');
         if (!empty($groupsok)) {
             $groups = choosegroup_detected_groups($COURSE->id, true);
             foreach ($groupsok as $group) {
