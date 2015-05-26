@@ -21,12 +21,10 @@
  * @author     Albert Gasset <albert.gasset@gmail.com>
  * @author     Marc Català <reskit@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author     Albert Gasset <albert.gasset@gmail.com>
- * @author     Marc Català <reskit@gmail.com>
  */
 
-require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
-require_once(dirname(__FILE__).'/lib.php');
+require_once(dirname(__FILE__) . '/../../config.php');
+require_once($CFG->dirroot . '/mod/choosegroup/lib.php');
 
 $id = required_param('id', PARAM_INT);   // course
 
@@ -55,6 +53,7 @@ $PAGE->set_title($strchoosegroups);
 $PAGE->set_heading($course->fullname);
 $PAGE->navbar->add($strchoosegroups);
 echo $OUTPUT->header();
+echo $OUTPUT->heading(format_string($strchoosegroups));
 
 
 // Get all the appropriate data
@@ -63,33 +62,48 @@ if (! $choosegroups = get_all_instances_in_course('choosegroup', $course)) {
     notice(get_string('thereareno', 'moodle', $strchoosegroups), "../../course/view.php?id=$course->id");
 }
 
-
 $usesections = course_format_uses_sections($course->format);
-if ($usesections) {
-    $sections = get_all_sections($course->id);
+
+$groupnames = array();
+
+$groups = groups_get_user_groups($course->id);
+
+if ($groups[0]) {
+    foreach ($groups[0] as $group) {
+        $groupnames[] = groups_get_group_name($group);
+    }
+} else {
+    $groupnames[] = get_string('groupsnone');
 }
 
-// Print the list of instances (your module will probably extend this)
-
-$timenow  = time();
-$strname  = get_string('name');
-$strweek  = get_string('week');
-$strtopic = get_string('topic');
+// Print the list of instances
 
 $table = new html_table();
 
-if ($course->format == 'weeks') {
-    $table->head  = array ($strweek, $strname);
-    $table->align = array ('center', 'left');
-} else if ($course->format == 'topics') {
-    $table->head  = array ($strtopic, $strname);
-    $table->align = array ('center', 'left', 'left', 'left');
+if ($usesections) {
+    $strsectionname = get_string('sectionname', 'format_'.$course->format);
+    $table->head  = array ($strsectionname, get_string("name"), get_string("group"));
+    $table->align = array ("center", "left", "left");
 } else {
-    $table->head  = array ($strname);
-    $table->align = array ('left', 'left', 'left');
+    $table->head  = array (get_string("name"), get_string("group"));
+    $table->align = array ("left", "left");
 }
 
+$currentsection = "";
+
 foreach ($choosegroups as $choosegroup) {
+    if ($usesections) {
+        $printsection = "";
+        if ($choosegroup->section !== $currentsection) {
+            if ($choosegroup->section) {
+                $printsection = get_section_name($course, $choosegroup->section);
+            }
+            if ($currentsection !== "") {
+                $table->data[] = 'hr';
+            }
+            $currentsection = $choosegroup->section;
+        }
+    }
     if (!$choosegroup->visible) {
         // Show dimmed if the mod is hidden
         $link = '<a class="dimmed" href="view.php?id='.$choosegroup->coursemodule.'">'.format_string($choosegroup->name).'</a>';
@@ -98,8 +112,8 @@ foreach ($choosegroups as $choosegroup) {
         $link = '<a href="view.php?id='.$choosegroup->coursemodule.'">'.format_string($choosegroup->name).'</a>';
     }
 
-    if ($course->format == 'weeks' or $course->format == 'topics') {
-        $table->data[] = array ($choosegroup->section, $link);
+    if ($usesections) {
+        $table->data[] = array ($printsection, $link, implode(' ', $groupnames));
     } else {
         $table->data[] = array ($link);
     }
