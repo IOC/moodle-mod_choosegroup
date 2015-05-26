@@ -3,12 +3,11 @@ CHOOSE GROUP
 
 Choose Group is a Moodle activity that allows students to choose their group.
 
-Web: https://github.com/IOC/moodle-choosegroup
-
+Web: https://github.com/IOC/moodle-mod_choosegroup
 
 Install
 =======
-Download code from gitHub, and copy inside directory <moodle directory>/mod/choosegroup
+Download code from GitHub, and copy inside directory /path/to/moodle/mod/choosegroup
 
 
 Authors
