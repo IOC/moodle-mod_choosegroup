@@ -38,7 +38,11 @@ if (!$course = $DB->get_record('course', array('id' => $id))) {
 
 require_course_login($course);
 $PAGE->set_pagelayout('incourse');
-add_to_log($course->id, 'choosegroup', 'view all', "index.php?id=$course->id", '');
+
+$event = \mod_choosegroup\event\course_module_instance_list_viewed::create(array(
+    'context' => context_course::instance($course->id)
+));
+$event->trigger();
 
 
 // Get all required stringschoosegroup

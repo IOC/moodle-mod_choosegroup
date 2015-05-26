@@ -15,18 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version information
+ * The mod_choosegroup course module instance list viewed event.
  *
- * @package    mod
- * @subpackage choosegroup
- * @copyright  2013 Institut Obert de Catalunya
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    mod_choosegroup
+ * @since      Moodle 2.7
+ * @copyright  2015 Institut Obert de Catalunya
  * @author     Marc Català <reskit@gmail.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+namespace mod_choosegroup\event;
 
 defined('MOODLE_INTERNAL') || die();
 
-$module->version   = 2015052600;            // The current module version (Date: YYYYMMDDXX)
-$module->requires  = 2014051200;            // Moodle 2.7
-$module->component = 'mod_choosegroup';     // Full name of the plugin (used for diagnostics)
-$module->cron      = 0;                     // Period for cron to check this module (secs)
+class course_module_instance_list_viewed extends \core\event\course_module_instance_list_viewed {
+}

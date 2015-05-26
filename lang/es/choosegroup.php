@@ -17,10 +17,10 @@
 /**
  * Strings for activity 'choosegroup', language 'es'
  *
- * @package   mod
+ * @package    mod
  * @subpackage choosegroup
- * @copyright
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Marc Català <reskit@gmail.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 
@@ -32,12 +32,12 @@ $string['chooseagroup'] = 'Escoge un grupo';
 $string['choosegroup:addinstance'] = 'Añade un escoge grupo nuevo';
 $string['choosegroup:choose'] = 'Escoge grupo';
 $string['currentgroup'] = 'Grupo actual';
-$string['groupchosen'] = 'Esta assignado al grupo: <strong>{$a}</strong>';
+$string['eventchoosinggroup'] = 'Grupo escogido';
+$string['groupchosen'] = 'Esta asignado al grupo: <strong>{$a}</strong>';
 $string['grouplimit'] = 'Límite';
 $string['groupmembers'] = 'Miembros de cada grupo';
 $string['groups'] = 'Grupos elegibles por los alumnos';
-$string['groups_help'] = 'Este listado muestra los grups que pueden ser incluidos
-dentro de la actividad, para que luego los alumnos puedan escogerlos.
+$string['groups_help'] = 'Este listado muestra los grupos que pueden ser incluidos dentro de la actividad, para que luego los alumnos puedan escogerlos.
 El límite por grupo indica cuantos alumnos como máximo pueden haber dentro de cada grupo.
 Si se marca la casilla "Sin límite", en ese grupo no habrá límite.';
 $string['intro'] = 'Introducción';
@@ -47,11 +47,11 @@ $string['name'] = 'Nombre';
 $string['nocoursegroups'] = 'El curso actual no tiene grupos creados.';
 $string['nogroups'] = 'No hay ningún grupo disponible';
 $string['nolimit'] = 'Sin límite';
-$string['nomembers'] = 'No hay miembros en este grup';
+$string['nomembers'] = 'No hay miembros en este grupo';
 $string['notopenyet'] = 'Lo sentimos, esta actividad no está disponible hasta {$a}';
 $string['novacancies'] = 'No hay plazas libres';
 $string['owngroupmembers'] = 'Miembros de su grupo';
-$string['pluginadministration'] = 'Escoge grup administración';
+$string['pluginadministration'] = 'Escoge grupo administración';
 $string['pluginname'] = 'Escoge grupo';
 $string['showmembers'] = 'Mostrar los miembros de cada grupo';
 $string['showmembers_help'] = 'Podemos escoger entre las siguientes opciones:
@@ -64,7 +64,7 @@ $string['shownames'] = 'Mostrar el nombre de los miembros de cada grupo';
 $string['shownames_help'] = 'Indica si se muestra o no, el nombre de los alumnos al lado de su fotografía del perfil.';
 $string['showresults:after'] = 'Después de escoger un grupo';
 $string['showresults:before'] = 'Antes de escoger un grupo';
-$string['showresults:closed'] = 'Cuando se cierre la activitat';
+$string['showresults:closed'] = 'Cuando se cierre la actividad';
 $string['showresults:never'] = 'Nunca';
 $string['timeclose'] = 'Fecha de cierre';
 $string['timeopen'] = 'Fecha de inicio';

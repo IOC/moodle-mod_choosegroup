@@ -17,11 +17,12 @@
 /**
  * Strings for activity 'choosegroup', language 'ca'
  *
- * @package   mod
+ * @package    mod
  * @subpackage choosegroup
- * @copyright
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Marc Català <reskit@gmail.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 
 $string['activityclosed'] = 'Aquesta activitat es va tancar el {$a}';
 $string['allowupdate'] = 'Permet canviar de grup';
@@ -31,6 +32,7 @@ $string['chooseagroup'] = 'Tria un grup';
 $string['choosegroup:addinstance'] = 'Afegeix un tria grup nou';
 $string['choosegroup:choose'] = 'Tria grup';
 $string['currentgroup'] = 'Grup actual';
+$string['eventchoosinggroup'] = 'Grup escollit';
 $string['groupchosen'] = 'Esteu assignat al grup: <strong>{$a}</strong>';
 $string['grouplimit'] = 'Límit';
 $string['groupmembers'] = 'Membres de cada grup';

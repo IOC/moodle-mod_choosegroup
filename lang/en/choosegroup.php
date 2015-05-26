@@ -17,10 +17,10 @@
 /**
  * Strings for activity 'choosegroup', language 'en'
  *
- * @package   mod
+ * @package    mod
  * @subpackage choosegroup
- * @copyright
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author     Marc Català <reskit@gmail.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 
@@ -33,6 +33,7 @@ $string['chooseagroup'] = 'Choose a group';
 $string['choosegroup:addinstance'] = 'Add a new choosegroup';
 $string['choosegroup:choose'] = 'Choose group';
 $string['currentgroup'] = 'Current group';
+$string['eventchoosinggroup'] = 'Group chosen';
 $string['groupchosen'] = 'Group chosen: <strong>{$a}</strong>';
 $string['grouplimit'] = 'Limit';
 $string['groupmembers'] = 'Group members';
@@ -58,7 +59,7 @@ $string['showmembers_help'] = 'There are several different types of choosegroup 
 * Show group members before they choose a group: Students can always see other group members.
 * Show group members after they choose a group: Students can see their fellow group members after they choose it.
 * Show group members after activity is closed: Students can see their fellow group members when activity is closed.
-* Never: Students can never see their fellow group members.';
+* Never: Students will never see their fellow group members.';
 $string['shownames'] = 'Show members name';
 $string['shownames_help'] = 'This option allows you to show members name next their profile picture.';
 $string['showresults:after'] = 'Show group members after they choose a group';

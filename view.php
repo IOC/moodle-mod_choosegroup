@@ -81,13 +81,30 @@ if (!empty($data->group)) {
         if ($completion->is_enabled($cm) && $choosegroup->completionchoosegroup) {
             $completion->update_state($cm, COMPLETION_COMPLETE);
         }
+
+        $eventdata = array();
+        $eventdata['context'] = $context;
+        $eventdata['objectid'] = $choosegroup->id;
+        $eventdata['userid'] = $USER->id;
+        $eventdata['courseid'] = $course->id;
+        $eventdata['other'] = array();
+        $eventdata['other']['group'] = (int) $data->group;
+
+        $event = \mod_choosegroup\event\choosing_group::create($eventdata);
+        $event->trigger();
     }
-    add_to_log($course->id, 'choosegroup', 'choose', "view.php?id={$cm->id}", "$data->group", $cm->id, $USER->id);
 
     redirect($url->out());
 }
 /************************ HEADER ************************/
-add_to_log($course->id, 'choosegroup', 'view', "view.php?id={$cm->id}", $choosegroup->name, $cm->id);
+$event = \mod_choosegroup\event\course_module_viewed::create(array(
+    'objectid' => $choosegroup->id,
+    'context' => $context,
+));
+$event->add_record_snapshot('course_modules', $cm);
+$event->add_record_snapshot('course', $course);
+$event->trigger();
+
 $strchoosegroups = get_string('modulenameplural', 'choosegroup');
 $strchoosegroup  = get_string('modulename', 'choosegroup');
 
