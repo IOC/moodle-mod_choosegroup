@@ -47,7 +47,7 @@ class mod_choosegroup_mod_form extends moodleform_mod {
         }
         $mform->addRule('name', null, 'required', null, 'client');
 
-        $this->add_intro_editor(true, get_string('description'));
+        $this->standard_intro_elements(get_string('description'));
 
         $mform->addElement('date_time_selector', 'timeopen', get_string('timeopen', 'choosegroup'), array('optional' => true));
         $mform->setDefault('timeopen', time());
