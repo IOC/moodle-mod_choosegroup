@@ -26,6 +26,8 @@
  * @author     Manuel Cagigas <sedras@gmail.com>
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->dirroot . '/group/lib.php');
 
 /**
@@ -99,7 +101,7 @@ function choosegroup_choose($choosegroup, $groups, $groupid, $currentgroup) {
         return;
     }
 
-    // Firstly remove previous group assignment
+    // Firstly remove previous group assignment.
     if ($currentgroup) {
         groups_remove_member($currentgroup->id, $USER->id);
     }
@@ -223,7 +225,7 @@ function choosegroup_update_instance($choosegroup) {
     $choosegroup->id = $choosegroup->instance;
     $choosegroup->timemodified = time();
     if (isset($choosegroup->lgroup)) {
-        // Update, delete or insert groups
+        // Update, delete or insert groups.
         foreach ($choosegroup->lgroup as $key => $value) {
             $group = new stdClass();
             $group->groupid = $key;
@@ -339,7 +341,8 @@ function choosegroup_show_members_col($groupid) {
                        $OUTPUT->user_picture($user, array('courseid' => $COURSE->id)).
                        '</div>'.
                        '<div class="user-col-name">'.
-                       '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$user->id.'&amp;course='.$COURSE->id.'">'.fullname($user, true).'</a>'.
+                       '<a href="' . $CFG->wwwroot.'/user/view.php?id=' . $user->id . '&amp;course=' . $COURSE->id . '">' .
+                        fullname($user, true).'</a>'.
                        '</div>'.
                        '</div>'.
                        '<div class="choosegroup_clear"></div>';
@@ -390,7 +393,7 @@ function choosegroup_get_completion_state($course, $cm, $userid, $type) {
         $groups = choosegroup_groups_assigned($choosegroup);
         $chosen = choosegroup_chosen($groups, $userid);
 
-        // Get the group selected by student
+        // Get the group selected by student.
 
         if ($type == COMPLETION_AND) {
             $result = $result && $chosen;

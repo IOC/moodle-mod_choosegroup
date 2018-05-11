@@ -36,7 +36,7 @@ define('CHOOSEGROUP_AFTER', 1);
 define('CHOOSEGROUP_CLOSED', 2);
 define('CHOOSEGROUP_NEVER', 3);
 
-$id = required_param('id', PARAM_INT);  // Course Module ID
+$id = required_param('id', PARAM_INT);  // Course Module ID.
 
 
 $url = new moodle_url('/mod/choosegroup/view.php', array('id' => $id));
@@ -65,18 +65,18 @@ $now = time();
 $isopen = ((!$choosegroup->timeopen || $choosegroup->timeopen <= $now) &&
 (!$choosegroup->timeclose || $choosegroup->timeclose > $now));
 
-// Info about grups
+// Info about grups.
 $groups = choosegroup_groups_assigned($choosegroup);
 
-// Get the group selected by student
+// Get the group selected by student.
 $chosen = choosegroup_chosen($groups, $USER->id);
 $data = data_submitted();
 
-// Check whether there's data submited
+// Check whether there's data submited.
 if (!empty($data->group)) {
     if ($canchoose && $isopen) {
         choosegroup_choose($choosegroup, $groups, (int) $data->group, $chosen);
-        // Update completion state
+        // Update completion state.
         $completion = new completion_info($course);
         if ($completion->is_enabled($cm) && $choosegroup->completionchoosegroup) {
             $completion->update_state($cm, COMPLETION_COMPLETE);
@@ -113,16 +113,16 @@ $PAGE->set_title(format_string($choosegroup->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($context);
 
-// View for completion
+// View for completion.
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
-// Output starts here
+// Output starts here.
 echo $OUTPUT->header();
 
 /************************ INTRO ************************/
 if ($choosegroup->intro) {
-    // Conditions to show the intro can change to look for own settings or whatever
+    // Conditions to show the intro can change to look for own settings or whatever.
     echo $OUTPUT->box(format_module_intro('choosegroup', $choosegroup, $cm->id), 'generalbox', 'intro');
 }
 /************************ PRINT DATES ************************/

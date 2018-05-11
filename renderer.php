@@ -26,6 +26,8 @@
  * @author     Manuel Cagigas <sedras@gmail.com>
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 class mod_choosegroup_renderer extends plugin_renderer_base {
     /**
      * Prints group form choosegroup

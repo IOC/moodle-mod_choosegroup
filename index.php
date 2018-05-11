@@ -26,7 +26,7 @@
 require_once(dirname(__FILE__) . '/../../config.php');
 require_once($CFG->dirroot . '/mod/choosegroup/lib.php');
 
-$id = required_param('id', PARAM_INT);   // course
+$id = required_param('id', PARAM_INT);   // Course id.
 
 $PAGE->set_url('/mod/choosegroup/index.php', array('id' => $id));
 
@@ -43,12 +43,12 @@ $event = \mod_choosegroup\event\course_module_instance_list_viewed::create(array
 $event->trigger();
 
 
-// Get all required stringschoosegroup
+// Get all required stringschoosegroup.
 
 $strchoosegroups = get_string('modulenameplural', 'choosegroup');
 $strchoosegroup  = get_string('modulename', 'choosegroup');
 
-// Print the header
+// Print the header.
 $PAGE->set_title($strchoosegroups);
 $PAGE->set_heading($course->fullname);
 $PAGE->navbar->add($strchoosegroups);
@@ -56,7 +56,7 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading(format_string($strchoosegroups));
 
 
-// Get all the appropriate data
+// Get all the appropriate data.
 
 if (! $choosegroups = get_all_instances_in_course('choosegroup', $course)) {
     notice(get_string('thereareno', 'moodle', $strchoosegroups), "../../course/view.php?id=$course->id");
@@ -76,7 +76,7 @@ if ($groups[0]) {
     $groupnames[] = get_string('groupsnone');
 }
 
-// Print the list of instances
+// Print the list of instances.
 
 $table = new html_table();
 
@@ -105,10 +105,10 @@ foreach ($choosegroups as $choosegroup) {
         }
     }
     if (!$choosegroup->visible) {
-        // Show dimmed if the mod is hidden
+        // Show dimmed if the mod is hidden.
         $link = '<a class="dimmed" href="view.php?id='.$choosegroup->coursemodule.'">'.format_string($choosegroup->name).'</a>';
     } else {
-        // Show normal if the mod is visible
+        // Show normal if the mod is visible.
         $link = '<a href="view.php?id='.$choosegroup->coursemodule.'">'.format_string($choosegroup->name).'</a>';
     }
 

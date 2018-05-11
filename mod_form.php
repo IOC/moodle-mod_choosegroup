@@ -26,6 +26,8 @@
  * @author     Manuel Cagigas <sedras@gmail.com>
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->dirroot.'/course/moodleform_mod.php');
 require_once($CFG->dirroot.'/mod/choosegroup/lib.php');
 
@@ -128,7 +130,7 @@ class mod_choosegroup_mod_form extends moodleform_mod {
         if (!$data) {
             return false;
         }
-        // Set up completion section even if checkbox is not ticked
+        // Set up completion section even if checkbox is not ticked.
         if (!empty($data->completionunlocked)) {
             if (empty($data->completionchoosegroup)) {
                 $data->completionchoosegroup = 0;
