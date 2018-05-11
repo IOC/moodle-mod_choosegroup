@@ -26,6 +26,8 @@
  * @author     Manuel Cagigas <sedras@gmail.com>
  */
 
+require_once($CFG->dirroot . '/group/lib.php');
+
 /**
  * Return all groups with members associated to a choosegroup instance
  *
@@ -99,14 +101,10 @@ function choosegroup_choose($choosegroup, $groups, $groupid, $currentgroup) {
 
     // Firstly remove previous group assignment
     if ($currentgroup) {
-        $DB->delete_records('groups_members', array('groupid' => $currentgroup->id, 'userid' => $USER->id));
+        groups_remove_member($currentgroup->id, $USER->id);
     }
 
-    $record = new stdClass();
-    $record->groupid = $groupid;
-    $record->userid = $USER->id;
-    $record->timeadded = time();
-    $DB->insert_record('groups_members', $record);
+    groups_add_member($groupid, $USER->id);
 }
 
 /**
