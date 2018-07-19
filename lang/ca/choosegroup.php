@@ -53,6 +53,7 @@ $string['novacancies'] = 'No hi ha places lliures';
 $string['owngroupmembers'] = 'Membres del seu grup';
 $string['pluginadministration'] = 'Tria grup administració';
 $string['pluginname'] = 'Tria grup';
+$string['privacy:metadata'] = 'Tria grup no enregistra cap dada personal.';
 $string['showmembers'] = 'Mostrar els membres de cada grup';
 $string['showmembers_help'] = 'Podem escollir entre les següents opcions:
 

@@ -53,6 +53,7 @@ $string['novacancies'] = 'No vacancies';
 $string['owngroupmembers'] = 'Fellow group members';
 $string['pluginadministration'] = 'Choose group administration';
 $string['pluginname'] = 'Choose group';
+$string['privacy:metadata'] = 'Choose group plugin does not store any personal data.';
 $string['showmembers'] = 'Show group members';
 $string['showmembers_help'] = 'There are several different types of choosegroup to choose from:
 

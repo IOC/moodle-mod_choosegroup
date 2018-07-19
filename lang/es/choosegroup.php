@@ -53,6 +53,7 @@ $string['novacancies'] = 'No hay plazas libres';
 $string['owngroupmembers'] = 'Miembros de su grupo';
 $string['pluginadministration'] = 'Escoge grupo administración';
 $string['pluginname'] = 'Escoge grupo';
+$string['privacy:metadata'] = 'Escoge grupo no almacena información personal.';
 $string['showmembers'] = 'Mostrar los miembros de cada grupo';
 $string['showmembers_help'] = 'Podemos escoger entre las siguientes opciones:
 
